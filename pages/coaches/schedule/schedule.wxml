@@ -1,0 +1,145 @@
+<!--pages/coaches/schedule.wxml-->
+<wxs module="format" src="./format.wxs"></wxs>
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 主内容 -->
+  <view class="content" wx:if="{{!loading}}">
+    <!-- 每周时段 -->
+    <view class="section">
+      <view class="section-title">每周时段</view>
+
+      <!-- 周卡片网格 -->
+      <view class="week-grid">
+        <!-- 周一到周六 -->
+        <view
+          class="day-card"
+          wx:for="{{['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']}}"
+          wx:key="*this"
+          wx:for-item="day"
+          bindtap="openEditModal"
+          data-day="{{day}}"
+        >
+          <view class="day-name">
+            {{day === 'monday' ? '周一' : day === 'tuesday' ? '周二' : day === 'wednesday' ? '周三' : day === 'thursday' ? '周四' : day === 'friday' ? '周五' : '周六'}}
+          </view>
+          <view class="day-slots">{{formatSlots(weeklySlots[day])}}</view>
+          <view class="edit-btn">编辑</view>
+        </view>
+
+        <!-- 周日（独占一行） -->
+        <view
+          class="day-card sunday"
+          bindtap="openEditModal"
+          data-day="sunday"
+        >
+          <view class="sunday-content">
+            <view class="day-name">周日</view>
+            <view class="day-slots">{{formatSlots(weeklySlots.sunday)}}</view>
+          </view>
+          <view class="edit-btn">编辑</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 批量操作 -->
+    <view class="section">
+      <view class="section-title">批量操作</view>
+      <view class="batch-actions">
+        <button class="batch-btn" bindtap="applyToWeekdays">应用工作日时段</button>
+        <button class="batch-btn secondary" bindtap="copyToAll" data-day="monday">复制周一到全部</button>
+      </view>
+    </view>
+
+    <!-- 特殊日期 -->
+    <view class="section">
+      <view class="section-title">特殊日期（不可预约）</view>
+
+      <view class="date-list" wx:if="{{unavailableDates.length > 0}}">
+        <view
+          class="date-item"
+          wx:for="{{unavailableDates}}"
+          wx:key="date"
+        >
+          <view class="date-info">
+            <text class="date-value">{{item.date}}</text>
+            <text class="date-reason" wx:if="{{item.reason}}">{{item.reason}}</text>
+          </view>
+          <view class="date-delete" bindtap="removeUnavailableDate" data-index="{{index}}" data-date="{{item.date}}">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-dates" wx:else>
+        <text class="empty-text">暂无特殊日期</text>
+      </view>
+
+      <button class="add-date-btn" bindtap="addUnavailableDate">
+        <text class="add-icon">+</text>
+        <text>添加不可预约日期</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view class="modal-mask" wx:if="{{showEditModal}}" bindtap="closeEditModal">
+    <view class="modal-container" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">编辑{{currentDayName}}的可预约时段</text>
+        <view class="modal-close" bindtap="closeEditModal">
+          <text class="close-icon">×</text>
+        </view>
+      </view>
+
+      <view class="modal-content">
+        <!-- 调试信息 -->
+        <view style="background: #f0f0f0; padding: 12rpx; margin-bottom: 12rpx; font-size: 22rpx; border-radius: 8rpx;">
+          <text>调试: currentSlots = {{currentSlots.length}} 个时段</text>
+          <text wx:if="{{currentSlots.length > 0}}">: {{currentSlots}}</text>
+        </view>
+
+        <scroll-view class="slots-list" scroll-y enhanced show-scrollbar="{{false}}">
+          <view
+            class="slot-item {{slotChecked[item] ? 'checked' : ''}}"
+            wx:for="{{availableHours}}"
+            wx:key="*this"
+            bindtap="toggleSlot"
+            data-hour="{{item}}"
+          >
+            <view class="slot-checkbox">
+              <text wx:if="{{slotChecked[item]}}">✓</text>
+            </view>
+            <text class="slot-time">{{format.formatHour(item)}}:00 - {{format.formatHour(item + 1)}}:00</text>
+          </view>
+        </scroll-view>
+
+        <view class="modal-actions">
+          <button class="modal-btn secondary" bindtap="toggleSelectAll">
+            {{currentSlots.length === availableHours.length ? '取消全选' : '全选'}}
+          </button>
+          <button class="modal-btn danger" bindtap="setAsRestDay">设为休息日</button>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="modal-btn-large secondary" bindtap="closeEditModal">取消</button>
+        <button class="modal-btn-large primary" bindtap="saveEdit">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部保存按钮 -->
+  <view class="bottom-actions" wx:if="{{!loading}}">
+    <button
+      class="save-btn {{saving ? 'disabled' : ''}}"
+      bindtap="saveSchedule"
+      disabled="{{saving}}"
+    >
+      {{saving ? '保存中...' : '保存设置'}}
+    </button>
+  </view>
+</view>

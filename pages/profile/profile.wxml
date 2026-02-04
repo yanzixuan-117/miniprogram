@@ -1,0 +1,199 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view class="not-login" wx:if="{{!hasLogin}}">
+    <view class="login-prompt">
+      <view class="login-icon">🎾</view>
+      <text class="login-title">欢迎使用挥拍GO</text>
+      <text class="login-subtitle">请先登录以使用全部功能</text>
+      <button class="login-btn" bindtap="goToLogin">立即登录</button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view class="logged-in" wx:if="{{hasLogin}}">
+    <!-- 用户信息头部 -->
+    <view class="profile-header">
+      <view class="avatar-wrapper">
+        <image
+          class="avatar"
+          src="{{userInfo.avatarUrl || '/images/avatar.png'}}"
+          mode="aspectFill"
+        ></image>
+        <view class="avatar-border"></view>
+      </view>
+      <text class="nickname">{{userInfo.nickname || '未设置昵称'}}</text>
+      <view class="role-badge role-{{userInfo.role}}">
+        <text class="role-icon">{{userInfo.role === 'student' ? '🎾' : (userInfo.role === 'coach' ? '👨‍🏫' : '⭐')}}</text>
+        <text>{{roleText}}</text>
+      </view>
+    </view>
+
+    <!-- 管理员角色切换 -->
+    <view class="admin-role-switcher" wx:if="{{isAdmin}}">
+      <view class="switcher-header">
+        <text class="switcher-icon">🔄</text>
+        <text class="switcher-title">角色切换</text>
+      </view>
+      <view class="role-options">
+        <view
+          class="role-option {{currentRole === 'admin' ? 'active' : ''}}"
+          bindtap="switchRole"
+          data-role="admin">
+          <view class="role-icon-wrapper role-admin">
+            <text class="role-icon">⭐</text>
+          </view>
+          <view class="role-text">
+            <text class="role-name">管理员</text>
+            <text class="role-desc">系统管理</text>
+          </view>
+          <view class="role-check {{currentRole === 'admin' ? 'show' : ''}}">
+            <text>✓</text>
+          </view>
+        </view>
+        <view
+          class="role-option {{currentRole === 'coach' ? 'active' : ''}}"
+          bindtap="switchRole"
+          data-role="coach">
+          <view class="role-icon-wrapper role-coach">
+            <text class="role-icon">👨‍🏫</text>
+          </view>
+          <view class="role-text">
+            <text class="role-name">教练</text>
+            <text class="role-desc">课程管理</text>
+          </view>
+          <view class="role-check {{currentRole === 'coach' ? 'show' : ''}}">
+            <text>✓</text>
+          </view>
+        </view>
+        <view
+          class="role-option {{currentRole === 'student' ? 'active' : ''}}"
+          bindtap="switchRole"
+          data-role="student">
+          <view class="role-icon-wrapper role-student">
+            <text class="role-icon">🎾</text>
+          </view>
+          <view class="role-text">
+            <text class="role-name">学员</text>
+            <text class="role-desc">预约学习</text>
+          </view>
+          <view class="role-check {{currentRole === 'student' ? 'show' : ''}}">
+            <text>✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 教练统计信息 -->
+    <view class="stats-row" wx:if="{{canViewCoach}}">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalStudents}}</text>
+        <text class="stat-label">学员数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalSessions}}</text>
+        <text class="stat-label">课程数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.rating}}</text>
+        <text class="stat-label">评分</text>
+      </view>
+    </view>
+
+    <!-- 学员统计信息 -->
+    <view class="stats-row" wx:if="{{canViewStudent}}">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalBookings}}</text>
+        <text class="stat-label">总预约</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.completedSessions}}</text>
+        <text class="stat-label">已完成</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.favoriteVideos}}</text>
+        <text class="stat-label">收藏视频</text>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section">
+      <view class="section-title">我的服务</view>
+      <view class="menu-grid">
+        <view class="menu-card" bindtap="goToMyBookings">
+          <view class="menu-card-icon">📅</view>
+          <text class="menu-card-text">我的预约</text>
+        </view>
+        <view class="menu-card" bindtap="goToMyRecords">
+          <view class="menu-card-icon">📝</view>
+          <text class="menu-card-text">课程记录</text>
+        </view>
+        <view class="menu-card" bindtap="goToFavorites">
+          <view class="menu-card-icon">⭐</view>
+          <text class="menu-card-text">我的收藏</text>
+        </view>
+        <view class="menu-card" wx:if="{{canViewCoach}}" bindtap="goToSessionHistory">
+          <view class="menu-card-icon">📊</view>
+          <text class="menu-card-text">教学历史</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 账户设置 -->
+    <view class="menu-list">
+      <view class="section-title">账户设置</view>
+
+      <view class="menu-item" bindtap="editProfile">
+        <view class="menu-icon">👤</view>
+        <text class="menu-text">编辑资料</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToCoachProfile">
+        <view class="menu-icon">👨‍🏫</view>
+        <text class="menu-text">教练资料</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToSchedule">
+        <view class="menu-icon">⏰</view>
+        <text class="menu-text">时间设置</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToVideoManage">
+        <view class="menu-icon">🎬</view>
+        <text class="menu-text">视频管理</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" wx:if="{{canViewAdmin}}" bindtap="goToAdminManage">
+        <view class="menu-icon">⚡</view>
+        <text class="menu-text">管理员功能</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" bindtap="goToSettings">
+        <view class="menu-icon">⚙️</view>
+        <text class="menu-text">设置</text>
+        <text class="arrow">></text>
+      </view>
+
+      <view class="menu-item" bindtap="goToAbout">
+        <view class="menu-icon">ℹ️</view>
+        <text class="menu-text">关于我们</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <!-- 退出登录 -->
+    <button class="logout-btn" bindtap="handleLogout">
+      <text>退出登录</text>
+    </button>
+
+    <!-- 用户信息 -->
+    <view class="user-info-footer">
+      <text class="info-text">注册时间: {{createTimeText}}</text>
+    </view>
+  </view>
+</view>

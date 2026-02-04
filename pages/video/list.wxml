@@ -1,0 +1,64 @@
+<!--pages/video/list.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-box" bindtap="goToSearch">
+      <text class="search-placeholder">搜索视频...</text>
+      <text class="search-icon">🔍</text>
+    </view>
+  </view>
+
+  <!-- 分类标签 -->
+  <scroll-view class="category-tabs" scroll-x>
+    <view class="tab-item {{activeCategory === '' ? 'active' : ''}}" bindtap="selectCategory" data-category="">
+      全部
+    </view>
+    <view class="tab-item {{activeCategory === '技术' ? 'active' : ''}}" bindtap="selectCategory" data-category="技术">
+      技术
+    </view>
+    <view class="tab-item {{activeCategory === '战术' ? 'active' : ''}}" bindtap="selectCategory" data-category="战术">
+      战术
+    </view>
+    <view class="tab-item {{activeCategory === '体能' ? 'active' : ''}}" bindtap="selectCategory" data-category="体能">
+      体能
+    </view>
+    <view class="tab-item {{activeCategory === '比赛' ? 'active' : ''}}" bindtap="selectCategory" data-category="比赛">
+      比赛
+    </view>
+    <view class="tab-item {{activeCategory === '花絮' ? 'active' : ''}}" bindtap="selectCategory" data-category="花絮">
+      花絮
+    </view>
+  </scroll-view>
+
+  <!-- 视频列表 -->
+  <view class="video-list">
+    <view class="video-item" wx:for="{{videoList}}" wx:key="_id" bindtap="watchVideo" data-id="{{item._id}}">
+      <view class="video-thumb-wrapper">
+        <image lazy-load class="video-thumb" src="{{item.thumbnail || '/images/default-video.png'}}" mode="aspectFill"></image>
+        <view class="video-duration">{{item.durationText || '00:00'}}</view>
+      </view>
+      <view class="video-info">
+        <text class="video-title">{{item.title}}</text>
+        <view class="video-meta">
+          <text class="video-category">{{item.category}}</text>
+          <text class="video-difficulty difficulty-{{item.difficulty}}">{{item.difficultyText}}</text>
+        </view>
+        <view class="video-stats">
+          <text class="stat-item">👁 {{item.viewCount}}</text>
+          <text class="stat-item">👍 {{item.likeCount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
+    <text>{{loading ? '加载中...' : '加载更多'}}</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && videoList.length === 0}}">
+    <text class="empty-icon">🎬</text>
+    <text class="empty-text">暂无视频内容</text>
+  </view>
+</view>

@@ -1,0 +1,84 @@
+<!--pages/booking/coach-list.wxml-->
+<view class="coach-list-container">
+  <!-- 筛选排序栏 - 现代设计 -->
+  <view class="filter-section">
+    <view class="filter-chip {{specialtyName === '全部' ? 'active' : ''}}" bindtap="showFilter">
+      <text class="chip-icon">🎯</text>
+      <text class="chip-text">{{specialtyName}}</text>
+      <text class="chip-arrow">▼</text>
+    </view>
+    <view class="filter-chip {{sortName === '综合排序' ? 'active' : ''}}" bindtap="showSort">
+      <text class="chip-icon">⚡</text>
+      <text class="chip-text">{{sortName}}</text>
+      <text class="chip-arrow">▼</text>
+    </view>
+  </view>
+
+  <!-- 教练列表 -->
+  <view class="coach-list" wx:if="{{!loading && filteredList.length > 0}}">
+    <view class="coach-item" wx:for="{{filteredList}}" wx:key="_id">
+      <view class="coach-card">
+        <!-- 卡片头部背景 -->
+        <view class="card-header-bg"></view>
+
+        <!-- 卡片内容 -->
+        <view class="card-content">
+          <!-- 教练头像 -->
+          <view class="avatar-wrapper">
+            <image lazy-load class="coach-avatar" src="{{item.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+            <!-- <view class="avatar-ring"></view> -->
+          </view>
+
+          <!-- 教练信息 -->
+          <view class="coach-info">
+            <view class="coach-name-row">
+              <text class="coach-name">{{item.name || '教练'}}</text>
+              <view class="rating-badge">
+                <text class="rating-star">★</text>
+                <text class="rating-text">{{item.rating || '5.0'}}</text>
+              </view>
+            </view>
+
+            <!-- 专长标签 -->
+            <view class="coach-tags" wx:if="{{item.specialty && item.specialty.length > 0}}">
+              <text class="tag" wx:for="{{item.specialty}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+            </view>
+
+            <!-- 评价信息 -->
+            <view class="coach-meta">
+              <view class="meta-item">
+                <text class="meta-icon">💬</text>
+                <text class="meta-text">{{item.reviewCount || 0}}条评价</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 卡片底部 - 操作按钮 -->
+        <view class="card-actions">
+          <button class="detail-btn" catchtap="viewCoachDetail" data-id="{{item._id}}">
+            <text class="btn-icon">👤</text>
+            <text>查看详情</text>
+          </button>
+          <button class="book-btn" catchtap="bookNow" data-id="{{item._id}}">
+            <text class="btn-icon">📅</text>
+            <text>立即预约</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && filteredList.length === 0}}">
+    <text class="empty-icon">👨‍🏫</text>
+    <text class="empty-text">暂无教练</text>
+    <text class="empty-hint">请稍后再试</text>
+  </view>
+</view>

@@ -1,0 +1,146 @@
+<!--pages/video/detail.wxml-->
+<view class="detail-container" wx:if="{{!loading && video}}">
+  <!-- 视频播放器 -->
+  <view class="video-player-wrapper">
+    <video
+      id="videoPlayer"
+      class="video-player"
+      src="{{video.videoUrl}}"
+      poster="{{video.thumbnail}}"
+      controls
+      show-center-play-btn
+      autoplay
+      loop
+      muted="{{false}}"
+      bindplay="onPlay"
+      bindpause="onPause"
+      bindended="onEnded"
+      object-fit="contain"
+    >
+      <cover-view class="video-cover" wx:if="{{!playing}}" bindtap="onTapCover">
+        <cover-image class="cover-image" src="{{video.thumbnail}}" mode="aspectFill"></cover-image>
+        <cover-view class="play-btn">▶</cover-view>
+      </cover-view>
+    </video>
+  </view>
+
+  <!-- 视频信息 -->
+  <view class="video-info">
+    <!-- 标题和统计 -->
+    <view class="info-header">
+      <text class="video-title">{{video.title}}</text>
+      <view class="video-stats">
+        <text class="stat-item">👁 {{video.viewCount || 0}}</text>
+        <text class="stat-item">👍 {{video.likeCount || 0}}</text>
+      </view>
+    </view>
+
+    <!-- 分类和难度 -->
+    <view class="video-meta">
+      <view class="meta-tag category-tag">{{video.category}}</view>
+      <view class="meta-tag difficulty-tag difficulty-{{video.difficulty}}">
+        {{video.difficultyText}}
+      </view>
+      <text class="video-duration">⏱ {{video.durationText || '00:00'}}</text>
+    </view>
+
+    <!-- 标签 -->
+    <view class="tags-row" wx:if="{{video.tags && video.tags.length > 0}}">
+      <text class="tag-item" wx:for="{{video.tags}}" wx:key="*this">#{{item}}</text>
+    </view>
+
+    <!-- 简介 -->
+    <view class="video-description" wx:if="{{video.description}}">
+      <text class="description-label">简介：</text>
+      <text class="description-text">{{video.description}}</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-bar">
+      <view class="action-btn" catchtap="onLike">
+        <text class="action-icon">{{isLiked ? '❤️' : '🤍'}}</text>
+        <text class="action-text">{{isLiked ? '已赞' : '点赞'}}</text>
+      </view>
+      <view class="action-btn" catchtap="onFavorite">
+        <text class="action-icon">{{isFavorited ? '⭐' : '☆'}}</text>
+        <text class="action-text">{{isFavorited ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="action-btn" catchtap="onShare">
+        <text class="action-icon">📤</text>
+        <text class="action-text">分享</text>
+      </view>
+      <view class="action-btn" catchtap="onViewComments">
+        <text class="action-icon">💬</text>
+        <text class="action-text">评论</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 作者信息 -->
+  <view class="author-section">
+    <view class="author-info">
+      <image lazy-load class="author-avatar" src="{{video.authorAvatar || '/images/avatar.png'}}" mode="aspectFill"></image>
+      <view class="author-detail">
+        <text class="author-name">{{video.authorName}}</text>
+        <text class="author-role">教练</text>
+      </view>
+    </view>
+    <view class="author-actions">
+      <button class="follow-btn" catchtap="onFollowAuthor">+ 关注</button>
+      <button class="contact-btn" catchtap="onContactCoach">联系</button>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comments-section" wx:if="{{showComments}}">
+    <view class="section-header">
+      <text class="section-title">评论 ({{comments.length}})</text>
+      <text class="close-btn" catchtap="onCloseComments">关闭</text>
+    </view>
+
+    <!-- 评论列表 -->
+    <view class="comments-list" wx:if="{{comments.length > 0}}">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+        <image lazy-load class="comment-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="comment-user">{{item.userName}}</text>
+            <text class="comment-time">{{item.createTimeText}}</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+          <view class="comment-actions">
+            <text class="comment-delete" catchtap="onDeleteComment" data-id="{{item._id}}">删除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="comments-empty" wx:if="{{comments.length === 0 && !loadingComments}}">
+      <text class="empty-text">暂无评论</text>
+      <text class="empty-hint">快来发表第一条评论吧</text>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="comments-loading" wx:if="{{loadingComments}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 发表评论 -->
+    <view class="comment-input-box">
+      <input
+        class="comment-input"
+        type="text"
+        placeholder="发表评论..."
+        value="{{commentContent}}"
+        bindinput="onCommentInput"
+      />
+      <button class="comment-send-btn" catchtap="onPostComment">发送</button>
+    </view>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

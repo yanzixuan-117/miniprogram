@@ -1,0 +1,136 @@
+<!-- pages/session/detail.wxml -->
+<view class="session-detail-container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 课程详情 -->
+  <view class="session-content" wx:if="{{!loading && session}}">
+    <!-- 状态卡片 -->
+    <view class="status-card status-{{session.status}}">
+      <view class="status-icon">
+        <text wx:if="{{session.status === 'pending'}}">⏳</text>
+        <text wx:if="{{session.status === 'confirmed'}}">✅</text>
+        <text wx:if="{{session.status === 'completed'}}">🎾</text>
+        <text wx:if="{{session.status === 'cancelled'}}">❌</text>
+      </view>
+      <view class="status-info">
+        <text class="status-text">{{session.statusText}}</text>
+        <text class="status-desc" wx:if="{{session.status === 'pending'}}">等待教练确认预约</text>
+        <text class="status-desc" wx:if="{{session.status === 'confirmed'}}">教练已确认，请按时参加</text>
+        <text class="status-desc" wx:if="{{session.status === 'completed'}}">课程已完成</text>
+        <text class="status-desc" wx:if="{{session.status === 'cancelled'}}">预约已取消</text>
+      </view>
+    </view>
+
+    <!-- 日期和时间卡片 -->
+    <view class="info-card">
+      <view class="card-title">
+        <text class="title-icon">📅</text>
+        <text class="title-text">课程时间</text>
+      </view>
+      <view class="datetime-display">
+        <view class="date-calendar">
+          <text class="date-month">{{session.dateText.month}}月</text>
+          <text class="date-day">{{session.dateText.day}}</text>
+          <text class="date-weekday">周{{session.dateText.weekday}}</text>
+        </view>
+        <view class="time-info">
+          <text class="time-text">{{session.startTime}}-{{session.endTime}}</text>
+          <text class="time-duration">1小时</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 教练信息卡片 -->
+    <view class="info-card">
+      <view class="card-title">
+        <text class="title-icon">👨‍🏫</text>
+        <text class="title-text">教练信息</text>
+      </view>
+      <view class="coach-detail">
+        <image class="coach-avatar" src="{{session.coachAvatar || '/images/avatar.png'}}" mode="aspectFill"></image>
+        <view class="coach-info">
+          <text class="coach-name">{{session.coachName}}</text>
+          <view class="coach-tags" wx:if="{{session.coachSpecialty && session.coachSpecialty.length > 0}}">
+            <text class="tag" wx:for="{{session.coachSpecialty}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 球馆信息卡片 -->
+    <view class="info-card" wx:if="{{session.venue}}">
+      <view class="card-title">
+        <text class="title-icon">🏟️</text>
+        <text class="title-text">球馆信息</text>
+      </view>
+      <view class="venue-detail">
+        <text class="venue-name">{{session.venue}}</text>
+        <text class="venue-address" wx:if="{{session.venueAddress}}">{{session.venueAddress}}</text>
+      </view>
+    </view>
+
+    <!-- 学员备注 -->
+    <view class="info-card" wx:if="{{session.studentNote}}">
+      <view class="card-title">
+        <text class="title-icon">📝</text>
+        <text class="title-text">学员备注</text>
+      </view>
+      <view class="note-content">
+        <text class="note-text">{{session.studentNote}}</text>
+      </view>
+    </view>
+
+    <!-- 教练反馈 -->
+    <view class="info-card" wx:if="{{session.feedback || session.status === 'completed'}}">
+      <view class="card-title">
+        <text class="title-icon">💬</text>
+        <text class="title-text">教练反馈</text>
+      </view>
+      <view class="note-content coach-note">
+        <text class="note-text" wx:if="{{session.feedback}}">{{session.feedback}}</text>
+        <text class="empty-note" wx:else>{{session.status === 'completed' ? '教练暂未添加反馈' : '课程结束后教练会添加反馈'}}</text>
+      </view>
+    </view>
+
+    <!-- 课程照片 -->
+    <view class="info-card" wx:if="{{session.photos && session.photos.length > 0}}">
+      <view class="card-title">
+        <text class="title-icon">📷</text>
+        <text class="title-text">课程照片</text>
+      </view>
+      <view class="photos-grid">
+        <view class="photo-item" wx:for="{{session.photos}}" wx:key="*this">
+          <image class="photo-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" data-urls="{{session.photos}}"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 创建时间 -->
+    <view class="info-meta" wx:if="{{session.createTime}}">
+      <text class="meta-text">预约时间：{{session.createTimeText}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="action-section" wx:if="{{!loading && session}}">
+    <!-- 待审核状态：取消按钮 -->
+    <view class="actions" wx:if="{{session.status === 'pending'}}">
+      <button class="action-btn cancel" catchtap="cancelSession">取消预约</button>
+    </view>
+
+    <!-- 已确认状态：取消按钮 -->
+    <view class="actions" wx:if="{{session.status === 'confirmed'}}">
+      <button class="action-btn cancel" catchtap="cancelSession">取消预约</button>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{!loading && error}}">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
+    <button class="retry-btn" catchtap="goBack">返回</button>
+  </view>
+</view>

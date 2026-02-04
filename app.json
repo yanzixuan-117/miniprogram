@@ -1,0 +1,85 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/agreement/user-agreement",
+    "pages/agreement/privacy-policy",
+    "pages/profile/profile",
+    "pages/profile/edit",
+    "pages/coaches/list",
+    "pages/coaches/detail",
+    "pages/coaches/profile/profile",
+    "pages/coaches/schedule/schedule",
+    "pages/booking/booking-hub",
+    "pages/booking/coach-list",
+    "pages/booking/select-date",
+    "pages/booking/select-time",
+    "pages/booking/confirm",
+    "pages/booking/my-bookings",
+    "pages/booking/manage",
+    "pages/session/create",
+    "pages/session/detail",
+    "pages/session/list",
+    "pages/session/history",
+    "pages/video/list",
+    "pages/video/detail",
+    "pages/video/search",
+    "pages/video/category",
+    "pages/video/upload",
+    "pages/video/manage",
+    "pages/video/favorites",
+    "pages/test/test",
+    "pages/admin/coach-manage/coach-manage/coach-manage",
+    "pages/admin-coach-select/coach-select",
+    "pages/admin-coach-edit/coach-edit",
+    "pages/admin/role-switch/role-switch",
+    "pages/admin/venue-manage/venue-manage/venue-manage",
+    "pages/admin/venue-manage/venue-edit/venue-edit"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#2C7EF8",
+    "navigationBarTitleText": "挥拍GO",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#2C7EF8",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/video/list",
+        "text": "教学视频"
+      },
+      {
+        "pagePath": "pages/booking/booking-hub",
+        "text": "预约"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "cloud": true,
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于选择球馆地址"
+    }
+  },
+  "rendererOptions": {
+    "skyline": {
+      "disableABTest": true,
+      "sdkVersion": "2.21.0"
+    }
+  }
+}

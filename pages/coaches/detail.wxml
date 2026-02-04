@@ -1,0 +1,43 @@
+<!--pages/coaches/detail.wxml-->
+<view class="detail-container" wx:if="{{coachInfo}}">
+  <!-- 教练信息卡片 -->
+  <view class="coach-card">
+    <image lazy-load class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <view class="coach-info">
+      <text class="coach-name">{{coachInfo.name || '教练'}}</text>
+      <view class="coach-rating">
+        <text class="star">⭐</text>
+        <text class="rating">{{coachInfo.rating || '5.0'}}</text>
+        <text class="count">({{coachInfo.reviewCount || 0}}条评价)</text>
+      </view>
+      <view class="coach-tags" wx:if="{{coachInfo.specialty && coachInfo.specialty.length > 0}}">
+        <text class="tag" wx:for="{{coachInfo.specialty}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 教练介绍 -->
+  <view class="section intro-section" wx:if="{{coachInfo.introduction}}">
+    <view class="section-title">教练介绍</view>
+    <text class="intro-text">{{coachInfo.introduction}}</text>
+  </view>
+
+  <!-- 教学经验 -->
+  <view class="section exp-section" wx:if="{{coachInfo.experience}}">
+    <view class="section-title">教学经验</view>
+    <text class="exp-text">{{coachInfo.experience}}</text>
+  </view>
+
+  <!-- 资质证书 -->
+  <view class="section cert-section" wx:if="{{coachInfo.certifications && coachInfo.certifications.length > 0}}">
+    <view class="section-title">资质证书</view>
+    <view class="cert-list">
+      <text class="cert-item" wx:for="{{coachInfo.certifications}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <button class="book-btn" bindtap="bookNow">立即预约</button>
+  </view>
+</view>

@@ -1,0 +1,127 @@
+<!--pages/session/history-->
+<view class="container">
+  <!-- 顶部统计栏 -->
+  <view class="stats-header">
+    <view class="stat-item">
+      <text class="stat-value">{{totalSessions || 0}}</text>
+      <text class="stat-label">总课程数</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{totalStudents || 0}}</text>
+      <text class="stat-label">学员数</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{totalHours || 0}}</text>
+      <text class="stat-label">总时长(h)</text>
+    </view>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-tabs">
+      <view
+        class="filter-tab {{filterType === 'all' ? 'active' : ''}}"
+        bindtap="onFilterChange"
+        data-type="all"
+      >
+        全部
+      </view>
+      <view
+        class="filter-tab {{filterType === 'week' ? 'active' : ''}}"
+        bindtap="onFilterChange"
+        data-type="week"
+      >
+        本周
+      </view>
+      <view
+        class="filter-tab {{filterType === 'month' ? 'active' : ''}}"
+        bindtap="onFilterChange"
+        data-type="month"
+      >
+        本月
+      </view>
+    </view>
+    <view class="search-box" bindtap="showSearch">
+      <text class="search-icon">🔍</text>
+    </view>
+  </view>
+
+  <!-- 课程记录列表 -->
+  <view class="session-list" wx:if="{{sessionList.length > 0}}">
+    <view
+      class="session-item"
+      wx:for="{{sessionList}}"
+      wx:key="_id"
+      bindtap="viewDetail"
+      data-id="{{item._id}}"
+    >
+      <!-- 日期卡片 -->
+      <view class="date-card">
+        <text class="date-day">{{item.dateText.day}}</text>
+        <text class="date-month">{{item.dateText.month}}月</text>
+        <text class="date-weekday">{{item.dateText.weekday}}</text>
+      </view>
+
+      <!-- 课程信息 -->
+      <view class="session-info">
+        <view class="session-header">
+          <view class="student-name">
+            <text class="name">{{item.studentName || '学员'}}</text>
+          </view>
+          <view class="session-duration">
+            <text class="duration">{{item.duration || 1}}小时</text>
+          </view>
+        </view>
+
+        <!-- 课程内容摘要 -->
+        <view class="session-content" wx:if="{{item.content}}">
+          <text class="content-text">{{item.content}}</text>
+        </view>
+
+        <!-- 训练重点标签 -->
+        <view class="session-tags" wx:if="{{item.focusPoints && item.focusPoints.length > 0}}">
+          <view class="tag" wx:for="{{item.focusPoints}}" wx:key="index" wx:for-item="point">
+            <text>{{point}}</text>
+          </view>
+        </view>
+
+        <!-- 底部信息 -->
+        <view class="session-footer">
+          <view class="time-info">
+            <text class="time">{{item.startTime}}</text>
+            <text class="divider">-</text>
+            <text class="time">{{item.endTime}}</text>
+          </view>
+          <view class="view-detail">
+            <text>查看详情</text>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{sessionList.length === 0 && !loading}}">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">暂无课程记录</text>
+    <text class="empty-hint">开始记录您的第一堂课程吧</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && !loading}}">
+    <text class="load-more-text" bindtap="loadMore">加载更多</text>
+  </view>
+
+  <!-- 没有更多 -->
+  <view class="no-more" wx:if="{{!hasMore && sessionList.length > 0}}">
+    <text class="no-more-text">没有更多了</text>
+  </view>
+</view>

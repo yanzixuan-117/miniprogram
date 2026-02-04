@@ -1,0 +1,147 @@
+<!-- pages/booking/confirm.wxml -->
+<view class="confirm-container">
+  <!-- 教练信息卡片 -->
+  <view class="coach-info-card" wx:if="{{coachInfo}}">
+    <image class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <view class="coach-details">
+      <text class="coach-name">{{coachInfo.name || '教练'}}</text>
+      <view class="coach-tags" wx:if="{{coachInfo.specialty && coachInfo.specialty.length > 0}}">
+        <text class="tag" wx:for="{{coachInfo.specialty}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预约信息卡片 -->
+  <view class="booking-info-card">
+    <view class="info-title">预约信息</view>
+
+    <view class="info-row">
+      <text class="info-label">预约日期</text>
+      <text class="info-value">{{dateText}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-label">预约时间</text>
+      <text class="info-value">{{timeText}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-label">选择球馆</text>
+    </view>
+    <view class="venue-options">
+      <view
+        class="venue-item {{selectedVenueIndex === index ? 'selected' : ''}} {{!item.available ? 'unavailable' : ''}}"
+        wx:for="{{venues}}"
+        wx:key="_id"
+        wx:for-index="index"
+        bindtap="selectVenue"
+        data-index="{{index}}"
+      >
+        <view class="venue-info">
+          <view class="venue-header">
+            <text class="venue-name">{{item.name}}</text>
+            <text class="venue-hours" wx:if="{{item.operatingHoursText}}">营业时间：{{item.operatingHoursText}}</text>
+          </view>
+          <text class="venue-desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <text class="venue-status unavailable-text" wx:if="{{!item.available && item.unavailableReason === 'outside_hours'}}">🕐 不在营业时间</text>
+          <text class="venue-status unavailable-text" wx:if="{{!item.available && item.unavailableReason === 'already_booked'}}">📅 该时段已满</text>
+        </view>
+        <text class="venue-check" wx:if="{{selectedVenueIndex === index}}">✓</text>
+      </view>
+      <view class="loading-text" wx:if="{{loadingVenues}}">
+        <text>加载球馆列表中...</text>
+      </view>
+      <view class="empty-text" wx:if="{{!loadingVenues && venues.length === 0}}">
+        <text>暂无可用的球馆</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上课人列表 -->
+  <view class="students-section">
+    <view class="section-header">
+      <text class="section-title">上课人</text>
+      <button class="add-btn" bindtap="showAddStudentModal">+ 添加</button>
+    </view>
+
+    <!-- 上课人列表 -->
+    <view class="students-list" wx:if="{{students.length > 0}}">
+      <view class="student-item" wx:for="{{students}}" wx:key="name">
+        <text class="student-name">{{item.name}}</text>
+        <text class="delete-btn" catchtap="removeStudent" data-index="{{index}}">删除</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{students.length === 0}}">
+      <text class="empty-text">暂无添加的上课人</text>
+      <text class="empty-hint">点击上方"添加"按钮，添加一起上课的朋友（只需填写姓名）</text>
+    </view>
+  </view>
+
+  <!-- 备注输入 -->
+  <view class="note-section">
+    <view class="note-title">预约备注（可选）</view>
+    <textarea
+      class="note-input"
+      placeholder="请输入您的需求或备注信息，如：想练习发球、初学者需要基础指导等"
+      value="{{studentNote}}"
+      bindinput="onNoteInput"
+      maxlength="200"
+      show-confirm-bar="{{false}}"
+      auto-height
+    ></textarea>
+    <view class="note-count">{{studentNote.length}}/200</view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-section">
+    <view class="tip-item">
+      <text class="tip-icon">💡</text>
+      <text class="tip-text">提交后请等待教练确认，确认后即为预约成功</text>
+    </view>
+    <view class="tip-item">
+      <text class="tip-icon">⏰</text>
+      <text class="tip-text">如需取消预约，请至少提前12小时操作</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button
+      class="submit-btn {{submitting ? 'disabled' : ''}}"
+      bindtap="submitBooking"
+      disabled="{{submitting}}"
+    >
+      {{submitting ? '提交中...' : '确认预约'}}
+    </button>
+  </view>
+</view>
+
+<!-- 添加上课人弹窗 -->
+<view class="modal-overlay" wx:if="{{showAddStudent}}" catchtap="hideAddStudentModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">添加上课人</text>
+      <text class="modal-close" catchtap="hideAddStudentModal">✕</text>
+    </view>
+
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">姓名</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="请输入一起上课的朋友姓名"
+          value="{{newStudentName}}"
+          bindinput="onStudentNameInput"
+        />
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <button class="modal-btn cancel-btn" catchtap="hideAddStudentModal">取消</button>
+      <button class="modal-btn confirm-btn" catchtap="addStudent">确定</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,49 @@
+<!--pages/coaches/list.wxml-->
+<view class="coach-list-container">
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 教练列表 -->
+  <view class="coach-list" wx:if="{{!loading && coachList.length > 0}}">
+    <view class="coach-card" wx:for="{{coachList}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
+      <!-- 教练头像 -->
+      <image lazy-load class="coach-avatar" src="{{item.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+
+      <!-- 教练信息 -->
+      <view class="coach-info">
+        <view class="coach-header">
+          <text class="coach-name">{{item.name || '教练'}}</text>
+          <view class="coach-rating">
+            <text class="star">⭐</text>
+            <text class="rating">{{item.rating || '5.0'}}</text>
+            <text class="count">({{item.reviewCount || 0}}条评价)</text>
+          </view>
+        </view>
+
+        <!-- 专长标签 -->
+        <view class="coach-tags" wx:if="{{item.specialty && item.specialty.length > 0}}">
+          <text class="tag" wx:for="{{item.specialty}}" wx:key="index" wx:for-item="specialty">
+            {{specialty}}
+          </text>
+        </view>
+
+        <!-- 简介 -->
+        <text class="coach-intro">{{item.introduction || '暂无简介'}}</text>
+
+        <!-- 经验 -->
+        <view class="coach-footer">
+          <text class="experience">{{item.experience || '经验丰富'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && coachList.length === 0}}">
+    <text class="empty-icon">👨‍🏫</text>
+    <text class="empty-text">暂无可预约教练</text>
+    <text class="empty-hint">稍后再来看看吧</text>
+  </view>
+</view>

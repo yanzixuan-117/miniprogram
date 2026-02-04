@@ -1,0 +1,115 @@
+/* pages/profile/profile.wxss */
+
+.profile-container {
+  min-height: 100vh;
+  background: #f7f7f7;
+  padding: 16rpx;
+}
+
+/* 用户信息卡片 */
+.user-info-card {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  background: #f0f0f0;
+  margin-right: 24rpx;
+}
+
+.user-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.user-nickname {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #000;
+}
+
+.user-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  width: fit-content;
+}
+
+.user-role-badge.role-student {
+  background: #e8f5e9;
+  color: #07C160;
+}
+
+.user-role-badge.role-coach {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.user-role-badge.role-admin {
+  background: #f3e5f5;
+  color: #9c27b0;
+}
+
+.role-icon {
+  font-size: 24rpx;
+}
+
+.edit-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  padding: 12rpx 16rpx;
+  background: #f7f7f7;
+  border-radius: 12rpx;
+}
+
+.edit-icon {
+  font-size: 32rpx;
+}
+
+.edit-text {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 信息区域 */
+.info-section {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 0 32rpx;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #000;
+}

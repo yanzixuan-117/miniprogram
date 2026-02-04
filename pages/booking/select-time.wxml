@@ -1,0 +1,45 @@
+<!-- pages/booking/select-time.wxml -->
+<view class="select-time-container">
+  <!-- 教练信息卡片 -->
+  <view class="coach-info-card" wx:if="{{coachInfo}}">
+    <image class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <view class="coach-details">
+      <text class="coach-name">{{coachInfo.name || '教练'}}</text>
+      <text class="coach-date">{{dateText}}</text>
+    </view>
+  </view>
+
+  <!-- 时间段列表 -->
+  <view class="time-slots-container">
+    <view class="section-title">选择时间段</view>
+
+    <!-- 空状态提示：当所有时段都不可用时显示 -->
+    <view class="empty-state" wx:if="{{allUnavailable}}">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">该日期教练未设置可预约时段</text>
+      <text class="empty-hint">请选择其他日期预约</text>
+    </view>
+
+    <view class="time-slots-grid" wx:else>
+      <view
+        class="time-slot-item {{item.available ? 'available' : 'disabled'}}"
+        wx:for="{{timeSlots}}"
+        wx:key="time"
+        bindtap="selectTimeSlot"
+        data-index="{{index}}"
+      >
+        <text class="slot-time">{{item.time}}-{{item.endTime}}</text>
+        <text class="slot-status" wx:if="{{!item.available}}">不可预约</text>
+        <text class="slot-status available" wx:if="{{item.available}}">可预约</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-section">
+    <view class="tip-item">
+      <text class="tip-icon">💡</text>
+      <text class="tip-text">选择时间后，请填写预约备注并提交</text>
+    </view>
+  </view>
+</view>

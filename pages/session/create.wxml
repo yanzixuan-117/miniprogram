@@ -1,0 +1,149 @@
+<!-- pages/session/create.wxml -->
+<view class="create-session-container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 课程内容 -->
+  <view class="session-content" wx:if="{{!loading && booking}}">
+    <!-- 课程信息卡片 -->
+    <view class="info-card">
+      <view class="card-title">
+        <text class="title-icon">📋</text>
+        <text class="title-text">课程信息</text>
+      </view>
+
+      <view class="info-row">
+        <text class="info-label">学员姓名</text>
+        <text class="info-value">{{booking.studentName}}</text>
+      </view>
+
+      <view class="info-row" wx:if="{{booking.students && booking.students.length > 0}}">
+        <text class="info-label">上课人</text>
+        <text class="info-value">
+          <text>{{booking.studentName}}</text>
+          <text wx:if="{{booking.students.length > 0}}">、</text>
+          <block wx:for="{{booking.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
+            <text>{{student.name}}</text>
+            <text wx:if="{{sIdx < booking.students.length - 1}}">、</text>
+          </block>
+        </text>
+      </view>
+
+      <view class="info-row">
+        <text class="info-label">课程时间</text>
+        <text class="info-value">{{booking.dateText}} {{booking.startTime}}-{{booking.endTime}}</text>
+      </view>
+
+      <view class="info-row" wx:if="{{booking.venue}}">
+        <text class="info-label">球馆</text>
+        <text class="info-value">{{booking.venue}}</text>
+      </view>
+
+      <view class="info-row" wx:if="{{booking.studentNote}}">
+        <text class="info-label">学员备注</text>
+        <text class="info-value note">{{booking.studentNote}}</text>
+      </view>
+    </view>
+
+    <!-- 课程反馈 -->
+    <view class="feedback-card">
+      <view class="card-title">
+        <text class="title-icon">💬</text>
+        <text class="title-text">课程反馈</text>
+        <text class="title-required">*</text>
+      </view>
+
+      <textarea
+        class="feedback-input"
+        placeholder="请填写本次课程的反馈内容，如：学员表现、练习重点、建议等"
+        value="{{feedback}}"
+        bindinput="onFeedbackInput"
+        maxlength="500"
+        show-confirm-bar="{{false}}"
+        auto-height
+      ></textarea>
+      <view class="feedback-count">{{feedback.length}}/500</view>
+    </view>
+
+    <!-- 课程状态 -->
+    <view class="status-card">
+      <view class="card-title">
+        <text class="title-icon">📌</text>
+        <text class="title-text">课程状态</text>
+      </view>
+
+      <view class="status-options">
+        <view
+          class="status-option {{status === 'completed' ? 'active' : ''}}"
+          bindtap="selectStatus"
+          data-status="completed"
+        >
+          <view class="status-icon">✅</view>
+          <text class="status-text">已完成</text>
+          <view class="status-check" wx:if="{{status === 'completed'}}">✓</view>
+        </view>
+
+        <view
+          class="status-option {{status === 'cancelled' ? 'active' : ''}}"
+          bindtap="selectStatus"
+          data-status="cancelled"
+        >
+          <view class="status-icon">❌</view>
+          <text class="status-text">已取消</text>
+          <view class="status-check" wx:if="{{status === 'cancelled'}}">✓</view>
+        </view>
+      </view>
+
+      <view class="status-tip" wx:if="{{status === 'cancelled'}}">
+        <text class="tip-icon">⚠️</text>
+        <text class="tip-text">取消后不可恢复，请谨慎操作</text>
+      </view>
+    </view>
+
+    <!-- 课程照片（可选） -->
+    <view class="photos-card">
+      <view class="card-title">
+        <text class="title-icon">📷</text>
+        <text class="title-text">课程照片（可选）</text>
+      </view>
+
+      <view class="photos-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image class="photo-image" src="{{item}}" mode="aspectFill"></image>
+          <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+
+        <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="choosePhoto">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加照片</text>
+        </view>
+      </view>
+
+      <view class="photos-tip">
+        <text class="tip-text">最多可上传9张照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions" wx:if="{{!loading}}">
+    <button
+      class="submit-btn {{submitting ? 'disabled' : ''}}"
+      bindtap="submitRecord"
+      disabled="{{submitting}}"
+    >
+      {{submitting ? '提交中...' : '提交记录'}}
+    </button>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{!loading && error}}">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
+    <button class="retry-btn" catchtap="goBack">返回</button>
+  </view>
+</view>

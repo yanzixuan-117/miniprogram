@@ -1,0 +1,83 @@
+<!-- pages/booking/select-date.wxml -->
+<view class="select-date-container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 教练信息卡片 -->
+  <view class="coach-info-card" wx:if="{{!loading && coachInfo}}">
+    <image class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <view class="coach-details">
+      <text class="coach-name">{{coachInfo.name || '教练'}}</text>
+    </view>
+  </view>
+
+  <!-- 日历卡片 -->
+  <view class="calendar-card" wx:if="{{!loading}}">
+    <!-- 月份切换 -->
+    <view class="calendar-header">
+      <view class="month-nav" bindtap="prevMonth">
+        <text class="nav-icon">‹</text>
+      </view>
+      <view class="month-title">{{currentYear}}年{{currentMonth}}月</view>
+      <view class="month-nav" bindtap="nextMonth">
+        <text class="nav-icon">›</text>
+      </view>
+    </view>
+
+    <!-- 星期标题 -->
+    <view class="weekdays">
+      <text class="weekday">日</text>
+      <text class="weekday">一</text>
+      <text class="weekday">二</text>
+      <text class="weekday">三</text>
+      <text class="weekday">四</text>
+      <text class="weekday">五</text>
+      <text class="weekday">六</text>
+    </view>
+
+    <!-- 日期网格 -->
+    <view class="date-grid">
+      <view
+        class="date-item {{item.isOtherMonth ? 'other-month' : ''}} {{item.isUnavailable ? 'unavailable' : ''}} {{item.isSelected ? 'selected' : ''}} {{item.isToday ? 'today' : ''}}"
+        wx:for="{{calendarDays}}"
+        wx:key="timestamp"
+        bindtap="selectDate"
+        data-timestamp="{{item.timestamp}}"
+      >
+        <text class="date-day">{{item.day}}</text>
+        <text class="date-label" wx:if="{{item.isToday}}">今天</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-section" wx:if="{{!loading}}">
+    <view class="tip-item">
+      <text class="tip-icon">💡</text>
+      <text class="tip-text">可预约未来7天的课程（周一至周六）</text>
+    </view>
+    <view class="tip-item">
+      <text class="tip-icon">📅</text>
+      <text class="tip-text">灰色日期为不可预约（周日或超出范围）</text>
+    </view>
+  </view>
+
+  <!-- 已选日期显示 -->
+  <view class="selected-info" wx:if="{{!loading && selectedDateText}}">
+    <text class="info-label">已选择：</text>
+    <text class="info-value">{{selectedDateText}}</text>
+  </view>
+
+  <!-- 确认按钮 -->
+  <view class="bottom-action" wx:if="{{!loading}}">
+    <button
+      class="confirm-btn {{selectedDate ? '' : 'disabled'}}"
+      bindtap="goToTimeSelect"
+      disabled="{{!selectedDate}}"
+    >
+      下一步：选择时间
+    </button>
+  </view>
+</view>

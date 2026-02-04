@@ -1,0 +1,75 @@
+<!--pages/booking/my-bookings.wxml-->
+<view class="my-bookings-container">
+  <!-- 状态筛选 -->
+  <scroll-view class="status-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="tab-item {{activeStatus === '' ? 'active' : ''}}" bindtap="selectStatus" data-status="">
+      全部
+    </view>
+    <view class="tab-item {{activeStatus === 'pending' ? 'active' : ''}}" bindtap="selectStatus" data-status="pending">
+      待审核
+    </view>
+    <view class="tab-item {{activeStatus === 'confirmed' ? 'active' : ''}}" bindtap="selectStatus" data-status="confirmed">
+      已确认
+    </view>
+    <view class="tab-item {{activeStatus === 'completed' ? 'active' : ''}}" bindtap="selectStatus" data-status="completed">
+      已完成
+    </view>
+    <view class="tab-item {{activeStatus === 'cancelled' ? 'active' : ''}}" bindtap="selectStatus" data-status="cancelled">
+      已取消
+    </view>
+  </scroll-view>
+
+  <!-- 预约列表 -->
+  <view class="booking-list" wx:if="{{!loading && bookingList.length > 0}}">
+    <view class="booking-item" wx:for="{{bookingList}}" wx:key="_id">
+      <view class="booking-card" bindtap="viewDetail" data-id="{{item._id}}">
+        <!-- 日期显示 -->
+        <view class="booking-date">
+          <view class="date-calendar">
+            <text class="date-month">{{item.dateText.month}}月</text>
+            <text class="date-day">{{item.dateText.day}}</text>
+            <text class="date-weekday">周{{item.dateText.weekday}}</text>
+          </view>
+          <view class="booking-time">
+            <text class="time-text">{{item.startTime}}-{{item.endTime}}</text>
+          </view>
+        </view>
+
+        <!-- 教练信息 -->
+        <view class="booking-coach">
+          <image class="coach-avatar" src="{{item.coachAvatar}}" mode="aspectFill"></image>
+          <view class="coach-info">
+            <text class="coach-name">{{item.coachName}}</text>
+            <view class="status-badge status-{{item.status}}">
+              {{item.statusText}}
+            </view>
+          </view>
+        </view>
+
+        <!-- 备注信息 -->
+        <view class="booking-note" wx:if="{{item.studentNote}}">
+          <text class="note-label">备注：</text>
+          <text class="note-text">{{item.studentNote}}</text>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="booking-actions" wx:if="{{item.canCancel}}">
+          <button class="action-btn cancel" catchtap="cancelBooking" data-id="{{item._id}}">取消预约</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && bookingList.length === 0}}">
+    <text class="empty-icon">📅</text>
+    <text class="empty-text">暂无预约记录</text>
+    <text class="empty-hint">快去预约一节网球课程吧</text>
+    <button class="go-booking-btn" bindtap="goToBooking">立即预约</button>
+  </view>
+</view>

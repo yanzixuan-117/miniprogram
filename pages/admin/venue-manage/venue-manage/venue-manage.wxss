@@ -1,0 +1,332 @@
+/* pages/admin/venue-manage/venue-manage.wxss */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f0f9ff 0%, #f7f7f7 100%);
+  padding-bottom: 32rpx;
+  padding-top: 24rpx;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* 顶部操作栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  margin-bottom: 16rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.venue-count {
+  font-size: 26rpx;
+  color: #8898aa;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.add-btn-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 6rpx rgba(102, 126, 234, 0.2);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.add-btn-mini:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.2);
+}
+
+.add-btn-mini .add-icon {
+  font-size: 28rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* 球馆列表 */
+.venue-list {
+  padding: 0 32rpx;
+  box-sizing: border-box;
+}
+
+.venue-item {
+  display: flex;
+  gap: 24rpx;
+  padding: 28rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.venue-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.venue-image {
+  width: 160rpx;
+  height: 160rpx;
+  min-width: 160rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 图片占位元素 */
+.venue-image-placeholder {
+  width: 160rpx;
+  height: 160rpx;
+  min-width: 160rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.placeholder-icon {
+  font-size: 64rpx;
+  line-height: 1;
+}
+
+.image-count {
+  position: absolute;
+  top: 36rpx;
+  left: 36rpx;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  backdrop-filter: blur(4rpx);
+}
+
+.venue-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  overflow: hidden;
+}
+
+.venue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  min-width: 0;
+}
+
+.venue-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.5rpx;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  padding: 6rpx 12rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+}
+
+.status-badge.inactive {
+  background: linear-gradient(135deg, #fff1f0 0%, #ffcdd2 100%);
+  color: #c62828;
+}
+
+.venue-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 16rpx;
+  background: #fafbfc;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.detail-row {
+  display: flex;
+  font-size: 24rpx;
+  line-height: 1.6;
+  align-items: center;
+  min-width: 0;
+}
+
+.detail-label {
+  color: #8898aa;
+  flex-shrink: 0;
+  margin-right: 8rpx;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #32325d;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 12rpx;
+  margin-top: auto;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 14rpx 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  border-radius: 12rpx;
+  border: none;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.action-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+  color: #0050b3;
+}
+
+.status-btn {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffd591 100%);
+  color: #d46b08;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
+  color: #cf1322;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 140rpx 32rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  margin-top: 20rpx;
+  box-sizing: border-box;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 32rpx;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10rpx);
+  }
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #525f7f;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #8898aa;
+  text-align: center;
+  padding: 0 32rpx;
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120rpx;
+  font-size: 26rpx;
+  color: #8898aa;
+  background: #fff;
+  border-radius: 24rpx;
+  margin: 0 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.loading-state::before {
+  content: '';
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid #f3f3f3;
+  border-top: 4rpx solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+

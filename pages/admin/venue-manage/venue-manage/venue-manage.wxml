@@ -1,0 +1,98 @@
+<!-- pages/admin/venue-manage/venue-manage.wxml -->
+<view class="container">
+  <!-- 顶部操作栏 -->
+  <view class="top-bar">
+    <text class="venue-count">{{venueList.length}} 个球馆</text>
+    <view class="add-btn-mini" bindtap="goToAddVenue">
+      <text class="add-icon">添加</text>
+    </view>
+  </view>
+
+  <!-- 球馆列表 -->
+  <view class="venue-list" wx:if="{{!loading}}">
+    <view
+      class="venue-item"
+      wx:for="{{venueList}}"
+      wx:key="_id"
+    >
+      <!-- 球馆图片 -->
+      <image
+        class="venue-image"
+        src="{{item.imageList && item.imageList.length > 0 ? item.imageList[0] : item.imageUrl}}"
+        mode="aspectFill"
+        wx:if="{{item.imageList && item.imageList.length > 0 || item.imageUrl}}"
+      ></image>
+      <view class="venue-image-placeholder" wx:else>
+        <text class="placeholder-icon">🏟️</text>
+      </view>
+      <view class="image-count" wx:if="{{item.imageList && item.imageList.length > 1}}">
+        <text>{{item.imageList.length}}张</text>
+      </view>
+
+      <!-- 球馆信息 -->
+      <view class="venue-info">
+        <view class="venue-header">
+          <text class="venue-name">{{item.name}}</text>
+          <view class="status-badge {{item.status === 1 ? 'active' : 'inactive'}}">
+            <text>{{item.status === 1 ? '● 营业中' : '○ 已停用'}}</text>
+          </view>
+        </view>
+
+        <view class="venue-details">
+          <view class="detail-row" wx:if="{{item.address}}">
+            <text class="detail-label">📍 地址</text>
+            <text class="detail-value">{{item.address}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.operatingHours}}">
+            <text class="detail-label">⏰ 时间</text>
+            <text class="detail-value">{{item.operatingHours.open}} - {{item.operatingHours.close}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.description}}">
+            <text class="detail-label">📝 描述</text>
+            <text class="detail-value">{{item.description}}</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="action-buttons">
+          <button
+            class="action-btn edit-btn"
+            bindtap="goToEditVenue"
+            data-id="{{item._id}}"
+          >
+            ✎️ 编辑
+          </button>
+          <button
+            class="action-btn status-btn"
+            bindtap="toggleStatus"
+            data-id="{{item._id}}"
+            data-status="{{item.status}}"
+            data-name="{{item.name}}"
+          >
+            {{item.status === 1 ? '⏸ 停用' : '▶️ 启用'}}
+          </button>
+          <button
+            class="action-btn delete-btn"
+            bindtap="deleteVenue"
+            data-id="{{item._id}}"
+            data-name="{{item.name}}"
+          >
+            🗑️ 删除
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{venueList.length === 0}}">
+      <text class="empty-icon">🏟️</text>
+      <text class="empty-text">暂无球馆</text>
+      <text class="empty-hint">点击右上角「添加球馆」按钮开始添加</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

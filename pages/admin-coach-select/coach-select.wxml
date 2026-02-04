@@ -1,0 +1,65 @@
+<!--pages/admin/coach-manage/coach-select.wxml-->
+<view class="user-select-container">
+  <!-- 顶部搜索栏 -->
+  <view class="header-bar">
+    <view class="search-bar">
+      <input class="search-input" placeholder="搜索用户昵称" value="{{keyword}}" bindinput="onSearchInput" />
+      <button class="search-btn" bindtap="onSearch">搜索</button>
+    </view>
+    <view class="filter-bar">
+      <picker mode="selector" range="{{['全部用户', '学员', '教练']}}" range-key="" value="{{roleFilter === 'all' ? 0 : roleFilter === 'student' ? 1 : 2}}" bindchange="onRoleFilterChange">
+        <view class="filter-picker">
+          <text>筛选：{{roleFilter === 'all' ? '全部用户' : roleFilter === 'student' ? '学员' : '教练'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 调试信息 -->
+  <view style="background: #ffeb3b; padding: 10rpx; font-size: 24rpx; margin: 0;">
+    <text>调试: 共{{userList.length}}个用户</text>
+  </view>
+
+  <!-- 用户列表 -->
+  <view class="user-list" wx:if="{{!loading && userList.length > 0}}">
+    <view class="user-item" wx:for="{{userList}}" wx:key="_openid" bindtap="selectUser" data-openid="{{item._openid}}" data-name="{{item.nickname}}" data-role="{{item.role}}">
+      <!-- 头像 -->
+      <image wx:if="{{item.avatarUrl}}"
+             class="user-avatar"
+             src="{{item.avatarUrl}}"
+             mode="aspectFill"
+             binderror="onUserImageError"
+             data-url="{{item.avatarUrl}}"
+             data-name="{{item.nickname}}"
+             data-index="{{index}}">
+      </image>
+      <view wx:else class="user-avatar default-avatar">👤</view>
+      <view class="user-detail">
+        <view class="user-name-row">
+          <text class="user-name">{{item.nickname || '未设置昵称'}}</text>
+          <view class="role-badge {{item.role}}">
+            <text>{{item.role === 'student' ? '学员' : item.role === 'coach' ? '教练' : '管理员'}}</text>
+          </view>
+        </view>
+        <text class="user-phone" wx:if="{{item.phone}}">{{item.phone}}</text>
+        <text class="user-time">注册时间：{{item.createTime ? item.createTime.slice(5, 16) : '未知'}}</text>
+      </view>
+      <view class="select-icon">
+        <text wx:if="{{item.role === 'coach'}}">✓</text>
+        <text wx:else class="add-text">添加</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{!loading && userList.length === 0}}">
+    <text class="empty-icon">👥</text>
+    <text class="empty-text">暂无用户</text>
+  </view>
+</view>

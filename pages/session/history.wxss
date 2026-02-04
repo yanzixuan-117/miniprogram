@@ -1,0 +1,306 @@
+/* pages/session/history */
+
+.container {
+  min-height: 100vh;
+  background: #f7f7f7;
+  padding-bottom: 32rpx;
+}
+
+/* ============= 顶部统计栏 ============= */
+.stats-header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40rpx 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-value {
+  font-size: 44rpx;
+  font-weight: 500;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============= 筛选栏 ============= */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 24rpx 32rpx;
+  margin: 16rpx 32rpx;
+  border-radius: 12rpx;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 8rpx;
+}
+
+.filter-tab {
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.filter-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.search-box {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+}
+
+/* ============= 课程记录列表 ============= */
+.session-list {
+  padding: 0 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.session-item {
+  display: flex;
+  gap: 16rpx;
+  background: #fff;
+  padding: 24rpx;
+  border-radius: 12rpx;
+}
+
+/* 日期卡片 */
+.date-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.date-day {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #667eea;
+  line-height: 1;
+}
+
+.date-month {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.date-weekday {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 2rpx;
+}
+
+/* 课程信息 */
+.session-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.student-name .name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #000;
+}
+
+.session-duration {
+  padding: 6rpx 16rpx;
+  background: #e8f5e9;
+  border-radius: 16rpx;
+}
+
+.session-duration .duration {
+  font-size: 22rpx;
+  color: #07C160;
+  font-weight: 500;
+}
+
+/* 课程内容 */
+.session-content {
+  padding: 12rpx;
+  background: #f7f7f7;
+  border-radius: 8rpx;
+}
+
+.content-text {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 训练重点标签 */
+.session-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  color: #667eea;
+}
+
+/* 底部信息 */
+.session-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.time-info .time {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.time-info .divider {
+  font-size: 20rpx;
+  color: #ddd;
+}
+
+.view-detail {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.view-detail .arrow {
+  font-size: 28rpx;
+}
+
+/* ============= 空状态 ============= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 32rpx;
+  background: #fff;
+  margin: 16rpx 32rpx;
+  border-radius: 12rpx;
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  margin-bottom: 16rpx;
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* ============= 加载中 ============= */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* ============= 加载更多 ============= */
+.load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.load-more-text {
+  font-size: 26rpx;
+  color: #667eea;
+  padding: 16rpx 48rpx;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 32rpx;
+}
+
+/* ============= 没有更多 ============= */
+.no-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.no-more-text {
+  font-size: 24rpx;
+  color: #ccc;
+}

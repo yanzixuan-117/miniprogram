@@ -1,0 +1,127 @@
+<!-- pages/admin/venue-manage/venue-edit/venue-edit.wxml -->
+<view class="container">
+  <!-- 页面标题 -->
+  <!-- <view class="page-header">
+    <text class="page-title">{{isEdit ? '编辑球馆' : '添加球馆'}}</text>
+  </view> -->
+
+  <!-- 表单内容 -->
+  <view class="form-content" wx:if="{{!loading}}">
+
+    <!-- 球馆图片 -->
+    <view class="form-section">
+      <view class="section-title">球馆图片（最多9张）</view>
+      <view class="image-list">
+        <view
+          class="image-item"
+          wx:for="{{imageList}}"
+          wx:key="index"
+        >
+          <image
+            class="uploaded-image"
+            src="{{item}}"
+            mode="aspectFill"
+            bindtap="previewImage"
+            data-index="{{index}}"
+          ></image>
+          <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+        <view class="image-item upload-item" wx:if="{{imageList.length < 9}}" bindtap="chooseImage">
+          <view class="upload-placeholder">
+            <text class="upload-icon">📷</text>
+            <text class="upload-text">添加图片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+
+      <!-- 球馆名称 -->
+      <view class="form-item">
+        <view class="form-label required">球馆名称</view>
+        <input
+          class="form-input"
+          placeholder="请输入球馆名称"
+          value="{{name}}"
+          bindinput="onNameInput"
+          maxlength="50"
+        />
+      </view>
+
+      <!-- 球馆地址 -->
+      <view class="form-item">
+        <view class="label-with-btn">
+          <view class="form-label required">球馆地址</view>
+          <button class="location-btn-mini" bindtap="chooseLocation">📍 定位</button>
+        </view>
+        <input
+          class="form-input"
+          placeholder="请输入球馆地址或使用定位"
+          value="{{address}}"
+          bindinput="onAddressInput"
+          maxlength="200"
+        />
+      </view>
+
+      <!-- 球馆描述 -->
+      <view class="form-item">
+        <view class="form-label">球馆描述</view>
+        <textarea
+          class="form-textarea"
+          placeholder="请输入球馆描述（选填）"
+          value="{{description}}"
+          bindinput="onDescriptionInput"
+          maxlength="500"
+          show-confirm-bar="{{false}}"
+          auto-height
+        ></textarea>
+        <view class="char-count">{{description.length}}/500</view>
+      </view>
+    </view>
+
+    <!-- 营业时间 -->
+    <view class="form-section">
+      <view class="section-title">营业时间</view>
+
+      <view class="time-range">
+        <picker mode="time" value="{{openTime}}" bindchange="onOpenTimeChange">
+          <view class="time-picker">
+            <text class="time-label">开始时间</text>
+            <text class="time-value">{{openTime}}</text>
+          </view>
+        </picker>
+
+        <text class="time-separator">至</text>
+
+        <picker mode="time" value="{{closeTime}}" bindchange="onCloseTimeChange">
+          <view class="time-picker">
+            <text class="time-label">结束时间</text>
+            <text class="time-value">{{closeTime}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions" wx:if="{{!loading}}">
+    <button
+      class="submit-btn {{submitting ? 'disabled' : ''}}"
+      bindtap="submitForm"
+      disabled="{{submitting}}"
+    >
+      {{submitting ? '提交中...' : (isEdit ? '保存修改' : '确认添加')}}
+    </button>
+  </view>
+</view>

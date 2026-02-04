@@ -1,0 +1,103 @@
+<!--pages/session/list.wxml-->
+<view class="container">
+  <!-- 状态筛选栏 -->
+  <view class="status-bar">
+    <view class="status-tabs">
+      <view
+        class="status-tab {{activeStatus === '' ? 'active' : ''}}"
+        bindtap="selectStatus"
+        data-status="">
+        全部
+      </view>
+      <view
+        class="status-tab {{activeStatus === 'completed' ? 'active' : ''}}"
+        bindtap="selectStatus"
+        data-status="completed">
+        已完成
+      </view>
+      <view
+        class="status-tab {{activeStatus === 'pending' ? 'active' : ''}}"
+        bindtap="selectStatus"
+        data-status="pending">
+        待完成
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && sessionList.length === 0}}">
+    <view class="empty-icon">📝</view>
+    <view class="empty-text">暂无课程记录</view>
+    <view class="empty-hint">完成课程后会在这里显示</view>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="session-list" wx:if="{{!loading}}">
+    <view
+      class="session-card"
+      wx:for="{{sessionList}}"
+      wx:key="_id"
+      bindtap="viewDetail"
+      data-id="{{item._id}}">
+
+      <!-- 卡片头部 -->
+      <view class="card-header">
+        <view class="coach-info">
+          <image class="coach-avatar" src="{{item.coachAvatar}}" mode="aspectFill"></image>
+          <view class="coach-details">
+            <view class="coach-name">{{item.coachName}}</view>
+            <view class="session-time">
+              <text class="time-icon">⏰</text>
+              <text>{{item.startTime}}-{{item.endTime}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="session-date">
+          <view class="date-day">{{item.dateText.day}}</view>
+          <view class="date-month">{{item.dateText.month}}月</view>
+        </view>
+      </view>
+
+      <!-- 状态标签 -->
+      <view class="status-badge status-{{item.status}}">
+        {{item.statusText}}
+      </view>
+
+      <!-- 课程内容 -->
+      <view class="session-content" wx:if="{{item.sessionContent}}">
+        <view class="content-title">课程内容</view>
+        <view class="content-text">{{item.sessionContent}}</view>
+      </view>
+      <view class="session-content" wx:else>
+        <view class="content-title">课程内容</view>
+        <view class="no-content">暂无内容</view>
+      </view>
+
+      <!-- 反馈评分 -->
+      <view class="session-rating" wx:if="{{item.rating}}">
+        <view class="rating-label">课程评分</view>
+        <view class="rating-stars">
+          <text class="star {{item.rating >= 1 ? 'filled' : ''}}">★</text>
+          <text class="star {{item.rating >= 2 ? 'filled' : ''}}">★</text>
+          <text class="star {{item.rating >= 3 ? 'filled' : ''}}">★</text>
+          <text class="star {{item.rating >= 4 ? 'filled' : ''}}">★</text>
+          <text class="star {{item.rating >= 5 ? 'filled' : ''}}">★</text>
+        </view>
+      </view>
+
+      <!-- 卡片底部 -->
+      <view class="card-footer">
+        <view class="venue-info" wx:if="{{item.venue}}">
+          <text class="venue-icon">📍</text>
+          <text>{{item.venue}}</text>
+        </view>
+        <button class="action-btn" size="mini">查看详情</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,108 @@
+<!-- pages/login/login.wxml -->
+<view class="login-container" wx:if="{{!hasLogin}}">
+    <!-- 背景装饰 -->
+    <view class="bg-decoration">
+        <view class="circle circle-1"></view>
+        <view class="circle circle-2"></view>
+        <view class="circle circle-3"></view>
+    </view>
+
+    <view class="login-card">
+        <!-- Logo区域 -->
+        <view class="logo-section">
+            <text class="logo-emoji">🎾</text>
+            <text class="app-name">挥拍GO</text>
+            <text class="app-slogan">专业的网球教学管理平台</text>
+        </view>
+
+        <!-- 登录内容 -->
+        <view class="login-content">
+
+            <!-- 头像选择 -->
+            <view class="form-section avatar-section">
+                <view class="form-label">
+                    <text class="label-icon">📷</text>
+                    <text class="label-text">头像</text>
+                    <text class="label-required">*</text>
+                </view>
+                <button
+                    class="avatar-picker"
+                    open-type="chooseAvatar"
+                    bindchooseavatar="onChooseAvatar"
+                    disabled="{{loading}}">
+                    <image
+                        wx:if="{{userAvatar}}"
+                        class="avatar-image"
+                        src="{{userAvatar}}"
+                        mode="aspectFill">
+                    </image>
+                    <view wx:else class="avatar-placeholder">
+                        <text class="placeholder-icon">📷</text>
+                        <text class="placeholder-text">点击选择头像</text>
+                    </view>
+                </button>
+            </view>
+
+            <!-- 昵称输入 -->
+            <view class="form-section nickname-section">
+                <view class="form-label">
+                    <text class="label-icon">✏️</text>
+                    <text class="label-text">昵称</text>
+                    <text class="label-required">*</text>
+                </view>
+                <input
+                    type="nickname"
+                    class="nickname-input"
+                    placeholder="请输入您的昵称"
+                    value="{{userNickname}}"
+                    bindinput="onNicknameInput"
+                    maxlength="20" />
+            </view>
+
+            <!-- 协议同意 -->
+            <view class="agreement-section">
+                <label class="agreement-checkbox" bindtap="toggleAgreement">
+                    <checkbox class="checkbox" checked="{{agreedToTerms}}" disabled="{{loading}}"/>
+                    <text class="agreement-text">
+                        我已阅读并同意
+                        <text class="agreement-link" catchtap="viewUserAgreement">《用户协议》</text>
+                        和
+                        <text class="agreement-link" catchtap="viewPrivacyPolicy">《隐私政策》</text>
+                    </text>
+                </label>
+            </view>
+
+            <!-- 登录按钮 -->
+            <button
+                class="wechat-login-btn {{agreedToTerms ? '' : 'disabled'}}"
+                bindtap="handleLogin"
+                disabled="{{loading || !agreedToTerms}}">
+                <text class="btn-text">{{loading ? '登录中...' : '微信登录'}}</text>
+            </button>
+
+            <!-- 登录提示 -->
+            <view wx:if="{{loading}}" class="logging-in">
+                <text class="loading-text">正在登录，请稍候...</text>
+            </view>
+        </view>
+    </view>
+</view>
+
+<!-- 登录成功 -->
+<view class="success-container" wx:else>
+    <view class="success-content">
+        <view class="success-animation">
+            <view class="success-icon-wrapper">
+                <text class="success-emoji">🎉</text>
+            </view>
+            <text class="success-title">登录成功！</text>
+            <text class="success-desc">欢迎加入挥拍GO</text>
+        </view>
+        <view class="user-info-card" wx:if="{{userInfo}}">
+            <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+            <view class="user-details">
+                <text class="user-nickname">{{userInfo.nickName}}</text>
+            </view>
+        </view>
+    </view>
+</view>

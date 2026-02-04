@@ -1,0 +1,131 @@
+<!--pages/video/upload.wxml-->
+<view class="upload-container" wx:if="{{!loading}}">
+  <!-- 上传视频 -->
+  <view class="form-section">
+    <view class="section-title">上传视频 *</view>
+
+    <!-- 已上传视频预览 -->
+    <view class="video-preview" wx:if="{{formData.videoUrl}}">
+      <video class="preview-video" src="{{formData.videoUrl}}" object-fit="contain"></video>
+      <view class="video-remove" catchtap="removeVideo">
+        <text class="remove-icon">×</text>
+      </view>
+    </view>
+
+    <!-- 上传按钮 -->
+    <button class="upload-btn" wx:else bindtap="chooseVideo" disabled="{{uploading}}">
+      <text class="upload-icon">📹</text>
+      <text class="upload-text">{{uploading ? '上传中...' : '选择视频'}}</text>
+    </button>
+
+    <!-- 上传进度 -->
+    <view class="upload-progress" wx:if="{{uploadProgress > 0 && uploading}}">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{uploadProgress}}%"></view>
+      </view>
+      <text class="progress-text">{{uploadProgress}}%</text>
+    </view>
+
+    <view class="upload-tip">支持MP4格式，最大60秒</view>
+  </view>
+
+  <!-- 封面图 -->
+  <view class="form-section">
+    <view class="section-title">封面图</view>
+
+    <!-- 已上传封面 -->
+    <view class="cover-preview" wx:if="{{formData.thumbnail}}">
+      <image class="cover-image" src="{{formData.thumbnail}}" mode="aspectFill"></image>
+      <view class="cover-remove" catchtap="removeThumbnail">
+        <text class="remove-icon">×</text>
+      </view>
+    </view>
+
+    <!-- 上传按钮 -->
+    <button class="upload-btn" wx:else bindtap="chooseThumbnail" disabled="{{uploading}}">
+      <text class="upload-icon">🖼️</text>
+      <text class="upload-text">{{formData.videoUrl ? '更换封面' : '选择封面'}}</text>
+    </button>
+
+    <view class="upload-hint" wx:if="{{formData.videoUrl && !formData.thumbnail}}">
+      <text class="hint-icon">💡</text>
+      <text class="hint-text">建议上传视频封面，让视频更吸引人</text>
+    </view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="form-section">
+    <view class="section-title">基本信息</view>
+
+    <view class="form-item">
+      <text class="label">视频标题 *</text>
+      <input class="input" placeholder="请输入视频标题（最多50字）" maxlength="50" value="{{formData.title}}" bindinput="onTitleInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">分类 *</text>
+      <picker class="picker" mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="picker-content">
+          <text class="picker-text">{{formData.category || '请选择分类'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">难度等级 *</text>
+      <picker class="picker" mode="selector" range="{{difficulties}}" range-key="label" value="{{difficultyIndex}}" bindchange="onDifficultyChange">
+        <view class="picker-content">
+          <text class="picker-text">{{difficultyText || '请选择难度'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">视频简介</text>
+      <textarea class="textarea" placeholder="请输入视频简介（最多200字）" maxlength="200" value="{{formData.description}}" bindinput="onDescriptionInput"></textarea>
+    </view>
+  </view>
+
+  <!-- 标签 -->
+  <view class="form-section">
+    <view class="section-title">标签</view>
+
+    <!-- 已选标签 -->
+    <view class="tags-container" wx:if="{{formData.tags.length > 0}}">
+      <view class="tag-item" wx:for="{{formData.tags}}" wx:key="*this">
+        <text class="tag-text">{{item}}</text>
+        <text class="tag-close" catchtap="removeTag" data-index="{{index}}">×</text>
+      </view>
+    </view>
+
+    <!-- 建议标签 -->
+    <view class="suggestions">
+      <text class="suggestion-tag {{formData.tags.includes(item) ? 'selected' : ''}}" wx:for="{{suggestions}}" wx:key="*this" catchtap="useSuggestion" data-tag="{{item}}">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 发布选项 -->
+  <view class="form-section">
+    <view class="section-title">发布选项</view>
+
+    <view class="form-item switch-item">
+      <text class="label">立即发布</text>
+      <switch checked="{{formData.status === 1}}" bindchange="onStatusChange" />
+      <text class="status-text">{{formData.status === 1 ? '发布' : '草稿'}}</text>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="footer">
+    <button class="save-btn" bindtap="save" disabled="{{saving || !formData.videoUrl}}">
+      {{saving ? '保存中...' : '发布视频'}}
+    </button>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

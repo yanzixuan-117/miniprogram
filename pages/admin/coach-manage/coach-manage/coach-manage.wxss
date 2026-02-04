@@ -1,0 +1,235 @@
+/* pages/admin/coach-manage/coach-manage.wxss */
+.coach-manage-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 40rpx;
+}
+
+/* 顶部操作栏 */
+.header-bar {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: #fff;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+  flex: 1;
+  height: 64rpx;
+  background: #f5f5f5;
+  border-radius: 32rpx;
+  padding: 0 24rpx;
+  font-size: 26rpx;
+}
+
+.search-btn {
+  width: 100rpx !important;
+  height: 64rpx;
+  background: #2C7EF8;
+  color: #fff;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  line-height: 64rpx;
+  padding: 0;
+  border: none;
+  flex-shrink: 0;
+}
+
+.search-btn::after {
+  border: none;
+}
+
+.add-btn {
+  height: 64rpx;
+  width: 140rpx!important;
+  padding: 0 20rpx;
+  background: #2C7EF8;
+  color: #fff;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  border: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.add-btn::after {
+  border: none;
+}
+
+.add-icon {
+  font-size: 28rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 教练列表 */
+.coach-list {
+  padding: 24rpx;
+}
+
+.coach-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.coach-info {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.coach-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.coach-avatar.default-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.coach-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.coach-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.coach-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.status-badge {
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+
+.status-badge.status-1 {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.status-badge.status-0 {
+  background: #ffebee;
+  color: #f44336;
+}
+
+.coach-specialty {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.coach-intro {
+  font-size: 26rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 4rpx;
+}
+
+.meta-item {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.coach-actions {
+  display: flex;
+  gap: 16rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.action-btn {
+  flex: 1;
+  height: 64rpx;
+  line-height: 64rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  padding: 0;
+  border: none;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.action-btn.edit {
+  background: #e3f2fd;
+  color: #2C7EF8;
+}
+
+.action-btn.toggle {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.action-btn.delete {
+  background: #ffebee;
+  color: #f44336;
+}
+
+/* 加载中 */
+.loading-container {
+  padding: 120rpx 0;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-container {
+  padding: 200rpx 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #999;
+}

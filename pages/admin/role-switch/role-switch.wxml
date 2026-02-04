@@ -1,0 +1,38 @@
+<!--pages/admin/role-switch/role-switch.wxml-->
+<view class="role-switch-container">
+  <!-- 当前角色提示 -->
+  <view class="current-role-card">
+    <text class="card-title">当前角色</text>
+    <view class="current-role-info">
+      <text class="role-emoji">{{roleList[currentRole === 'admin' ? 0 : currentRole === 'coach' ? 1 : 2].emoji}}</text>
+      <text class="role-name">{{roleList[currentRole === 'admin' ? 0 : currentRole === 'coach' ? 1 : 2].name}}</text>
+    </view>
+  </view>
+
+  <!-- 角色列表 -->
+  <view class="role-list">
+    <text class="list-title">切换角色</text>
+    <view class="role-item" wx:for="{{roleList}}" wx:key="value" bindtap="switchRole" data-role="{{item.value}}">
+      <view class="role-main">
+        <text class="role-emoji">{{item.emoji}}</text>
+        <view class="role-detail">
+          <text class="role-name">{{item.name}}</text>
+          <text class="role-desc">{{item.desc}}</text>
+        </view>
+      </view>
+      <view class="role-status">
+        <text wx:if="{{item.value === currentRole}}" class="current-badge">当前</text>
+        <text wx:else class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tip-card">
+    <text class="tip-icon">💡</text>
+    <view class="tip-content">
+      <text class="tip-title">温馨提示</text>
+      <text class="tip-text">切换角色后，您可以体验不同角色的功能。切换到学员或教练角色后，可以随时切换回管理员角色。</text>
+    </view>
+  </view>
+</view>

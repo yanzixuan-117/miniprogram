@@ -1,0 +1,59 @@
+<!--pages/profile/edit.wxml-->
+<view class="edit-container">
+
+  <!-- 头像选择卡片 -->
+  <view class="avatar-card">
+    <view class="card-header">
+      <text class="card-icon">📷</text>
+      <text class="card-title">个人头像</text>
+    </view>
+    <view class="avatar-content">
+      <view class="avatar-wrapper">
+        <image
+          class="avatar-image"
+          src="{{newAvatar || userInfo.avatarUrl || '/images/default-avatar.png'}}"
+          mode="aspectFill"
+        ></image>
+        <view class="avatar-badge" wx:if="{{newAvatar}}">
+          <text class="badge-text">新</text>
+        </view>
+      </view>
+      <button class="change-avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <text class="btn-icon">🔄</text>
+        <text>更换头像</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 昵称输入卡片 -->
+  <view class="input-card">
+    <view class="card-header">
+      <text class="card-icon">👤</text>
+      <text class="card-title">昵称</text>
+    </view>
+    <view class="input-wrapper">
+      <input
+        class="nickname-input"
+        type="nickname"
+        placeholder="输入你的昵称"
+        value="{{newNickname}}"
+        bindinput="onNicknameInput"
+        maxlength="20"
+        placeholder-class="input-placeholder"
+      />
+      <view class="char-count">{{newNickname.length}}/20</view>
+    </view>
+    <view class="input-tip">
+      <text class="tip-icon">💡</text>
+      <text>昵称长度为2-20个字符，建议使用真实姓名或易记的昵称</text>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="action-buttons">
+    <button class="save-btn" bindtap="handleSave" disabled="{{saving}}">
+      <text class="save-icon" wx:if="{{!saving}}">💾</text>
+      <text class="save-text">{{saving ? '保存中...' : '保存修改'}}</text>
+    </button>
+  </view>
+</view>

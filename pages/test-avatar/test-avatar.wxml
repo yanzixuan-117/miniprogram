@@ -1,0 +1,75 @@
+<!-- 测试头像显示页面 -->
+<view class="container">
+  <view class="title">头像显示测试</view>
+
+  <!-- 测试当前用户头像 -->
+  <view class="section">
+    <view class="section-title">当前登录用户</view>
+    <view class="avatar-test">
+      <image
+        class="avatar-large"
+        src="{{userInfo.avatarUrl}}"
+        mode="aspectFill"
+      ></image>
+      <text class="nickname">{{userInfo.nickname || '未设置'}}</text>
+      <text class="openid">{{userInfo._openid}}</text>
+    </view>
+  </view>
+
+  <!-- 直接显示获取到的头像URL -->
+  <view class="section">
+    <view class="section-title">直接显示头像URL</view>
+    <view class="avatar-test">
+      <image
+        class="avatar-large"
+        src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"
+        mode="aspectFill"
+      ></image>
+      <text class="note">你获取到的头像URL</text>
+    </view>
+  </view>
+
+  <!-- 使用占位图 -->
+  <view class="section">
+    <view class="section-title">占位头像（如果获取失败）</view>
+    <view class="avatar-test">
+      <view class="avatar-placeholder">
+        <text class="placeholder-text">🎾</text>
+      </view>
+      <text class="note">默认占位图</text>
+    </view>
+  </view>
+
+  <!-- 数据信息 -->
+  <view class="section">
+    <view class="section-title">数据信息</view>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="label">是否有头像URL:</text>
+        <text class="value {{hasAvatar ? 'success' : ''}}">{{hasAvatar ? '是' : '否'}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">头像URL长度:</text>
+        <text class="value">{{avatarUrlLength}} 字符</text>
+      </view>
+      <view class="info-item">
+        <text class="label">昵称:</text>
+        <text class="value">{{userInfo.nickname || '空'}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">是否为默认昵称:</text>
+        <text class="value {{isDefaultNickname ? 'warning' : ''}}">{{isDefaultNickname ? '是（微信用户）' : '否'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 建议 -->
+  <view class="section tips">
+    <view class="tips-title">💡 说明</view>
+    <text class="tips-text">
+      1. 头像URL已正确获取 ✅\n
+      2. 昵称显示"微信用户"是微信政策限制 ⚠️\n
+      3. 需要用户自行设置昵称或使用头像昵称填写组件
+    </text>
+  </view>
+</view>

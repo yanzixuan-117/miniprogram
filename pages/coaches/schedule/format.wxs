@@ -1,0 +1,12 @@
+// 格式化小时显示（补零）
+function formatHour(hour) {
+  var hourStr = hour.toString()
+  if (hourStr.length < 2) {
+    return '0' + hourStr
+  }
+  return hourStr
+}
+
+module.exports = {
+  formatHour: formatHour
+}

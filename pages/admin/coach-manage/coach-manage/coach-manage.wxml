@@ -1,0 +1,68 @@
+<!--pages/admin/coach-manage/coach-manage.wxml-->
+<view class="coach-manage-container">
+  <!-- 顶部操作栏 -->
+  <view class="header-bar">
+    <input class="search-input" placeholder="搜索教练姓名" value="{{keyword}}" bindinput="onSearchInput" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+    <button class="add-btn" bindtap="goToAddCoach">
+      <!-- <text class="add-icon">+</text> -->
+      <text>添加教练</text>
+    </button>
+  </view>
+
+  <!-- 教练列表 -->
+  <view class="coach-list" wx:if="{{!loading && coachList.length > 0}}">
+    <view class="coach-item" wx:for="{{coachList}}" wx:key="_id">
+      <view class="coach-info" bindtap="goToEditCoach" data-id="{{item._id}}">
+        <!-- 头像 -->
+        <image wx:if="{{item.avatarUrl}}"
+               class="coach-avatar"
+               src="{{item.avatarUrl}}"
+               mode="aspectFill"
+               binderror="onImageError"
+               data-url="{{item.avatarUrl}}"
+               data-name="{{item.name || item.nickname}}"
+               data-index="{{index}}">
+        </image>
+        <view wx:else class="coach-avatar default-avatar">👨‍🏫</view>
+        <view class="coach-detail">
+          <view class="coach-name-row">
+            <text class="coach-name">{{item.name || item.nickname || '未设置姓名'}}</text>
+            <view class="status-badge status-{{item.status}}">
+              <text>{{item.status === 1 ? '启用' : '禁用'}}</text>
+            </view>
+          </view>
+          <text class="coach-specialty" wx:if="{{item.specialty && item.specialty.length > 0}}">
+            专长：{{item.specialty[0]}}{{item.specialty.length > 1 ? ' 等' + item.specialty.length + '项' : ''}}
+          </text>
+          <text class="coach-intro" wx:if="{{item.introduction && item.introduction !== '暂无简介'}}">
+            {{item.introduction}}
+          </text>
+          <view class="coach-meta">
+            <text class="meta-item">⭐ {{item.rating || '5.0'}}</text>
+            <text class="meta-item">📝 {{item.reviewCount || 0}}条评价</text>
+          </view>
+        </view>
+      </view>
+      <view class="coach-actions">
+        <button class="action-btn edit" catchtap="goToEditCoach" data-id="{{item._id}}">编辑</button>
+        <button class="action-btn toggle" catchtap="toggleStatus" data-id="{{item._id}}" data-status="{{item.status}}">
+          {{item.status === 1 ? '禁用' : '启用'}}
+        </button>
+        <button class="action-btn delete" catchtap="deleteCoach" data-id="{{item._id}}" data-name="{{item.name}}">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{!loading && coachList.length === 0}}">
+    <text class="empty-icon">👨‍🏫</text>
+    <text class="empty-text">暂无教练</text>
+    <text class="empty-hint">点击上方"添加教练"开始添加</text>
+  </view>
+</view>

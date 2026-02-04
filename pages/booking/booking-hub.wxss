@@ -1,0 +1,343 @@
+/* pages/booking/booking-hub.wxss */
+.hub-container {
+  min-height: 100vh;
+  background: #f7f7f7;
+  padding-bottom: 32rpx;
+}
+
+/* 状态筛选 */
+.status-tabs {
+  display: flex;
+  white-space: nowrap;
+  padding: 24rpx 32rpx;
+  background: #fff;
+  margin-bottom: 16rpx;
+}
+
+.tab-item {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 16rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #f5f5f5;
+  border-radius: 48rpx;
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  color: #fff;
+  background: #07c160;
+  font-weight: 500;
+}
+
+/* 预约列表 */
+.booking-list {
+  padding: 0 32rpx;
+}
+
+.booking-item {
+  margin-bottom: 24rpx;
+}
+
+.booking-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 日期显示 */
+.booking-date {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.date-calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.date-calendar.pending {
+  background: linear-gradient(135deg, #fa8c16 0%, #f5222d 100%);
+}
+
+.date-month {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 4rpx;
+}
+
+.date-day {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4rpx;
+}
+
+.date-weekday {
+  font-size: 18rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.booking-time {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.time-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #000;
+}
+
+/* 教练信息（学员视图） */
+.booking-coach {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.coach-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #f7f7f7;
+  flex-shrink: 0;
+}
+
+.coach-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coach-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000;
+}
+
+/* 学员信息（教练视图） */
+.booking-student {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.student-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #f7f7f7;
+  flex-shrink: 0;
+}
+
+.student-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.student-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000;
+}
+
+.booking-date-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 上课人列表 */
+.students-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8rpx;
+  margin-top: 4rpx;
+  width: 100%;
+  line-height: 1.6;
+}
+
+.students-label {
+  font-size: 24rpx;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.students-names {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+  flex: 1;
+  word-wrap: break-word;
+  word-break: keep-all;
+  min-width: 0;
+}
+
+/* 备注信息 */
+.booking-note {
+  padding: 16rpx;
+  background: #f7f7f7;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.note-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 8rpx;
+}
+
+.note-text {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 操作按钮 */
+.booking-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.action-btn {
+  padding: 16rpx 32rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  border: none;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.action-btn.confirm {
+  background: #07c160;
+  color: #fff;
+}
+
+.action-btn.reject {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.action-btn.complete {
+  background: #1890ff;
+  color: #fff;
+}
+
+.action-btn.cancel {
+  background: #f5222d;
+  color: #fff;
+}
+
+/* 状态标签 */
+.status-badge {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 24rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status-badge.status-pending {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.status-badge.status-confirmed {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.status-badge.status-completed {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.status-badge.status-cancelled {
+  background: #f5f5f5;
+  color: #999;
+}
+
+.status-badge.status-rejected {
+  background: #fff1f0;
+  color: #f5222d;
+}
+
+/* 加载中 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #ccc;
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.go-booking-btn {
+  padding: 20rpx 48rpx;
+  background: #07c160;
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.go-booking-btn::after {
+  border: none;
+}

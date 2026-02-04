@@ -1,0 +1,111 @@
+<!--pages/coaches/profile.wxml-->
+<view class="coach-profile-container">
+  <!-- 表单 -->
+  <view class="form-section">
+    <!-- 头像 -->
+    <view class="form-item">
+      <text class="form-label">头像</text>
+      <view class="avatar-section">
+        <image
+          class="avatar-preview"
+          src="{{formData.avatarUrl || '/images/avatar.png'}}"
+          mode="aspectFill">
+        </image>
+        <button class="upload-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          选择头像
+        </button>
+      </view>
+    </view>
+
+    <!-- 姓名 -->
+    <view class="form-item">
+      <text class="form-label">姓名 <text class="required">*</text></text>
+      <input
+        class="form-input"
+        placeholder="请输入您的姓名"
+        value="{{formData.name}}"
+        bindinput="onNameInput"
+        maxlength="10" />
+    </view>
+
+    <!-- 专长标签 -->
+    <view class="form-item">
+      <text class="form-label">专长标签</text>
+      <view class="tags-input">
+        <view class="tag-list">
+          <view
+            class="tag-item"
+            wx:for="{{formData.specialty}}"
+            wx:key="index">
+            {{item}}
+            <text class="tag-remove" bindtap="removeTag" data-index="{{index}}">×</text>
+          </view>
+        </view>
+        <view class="add-tag-box">
+          <input
+            class="tag-input"
+            placeholder="输入专长"
+            value="{{tagInput}}"
+            bindinput="onTagInput"
+            maxlength="8" />
+          <button class="add-tag-btn" bindtap="addTag" size="mini" disabled="{{!tagInput}}">添加</button>
+        </view>
+        <view class="tag-suggestions">
+          <text class="suggestion-tag" wx:for="{{suggestions}}" wx:key="index" bindtap="useSuggestion" data-tag="{{item}}">
+            + {{item}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 简介 -->
+    <view class="form-item">
+      <text class="form-label">个人简介</text>
+      <textarea
+        class="form-textarea"
+        placeholder="请介绍一下您的教学经验和教学特色"
+        value="{{formData.introduction}}"
+        bindinput="onIntroInput"
+        maxlength="200"
+        auto-height />
+      <text class="char-count">{{formData.introduction.length}}/200</text>
+    </view>
+
+    <!-- 经验 -->
+    <view class="form-item">
+      <text class="form-label">教学经验</text>
+      <input
+        class="form-input"
+        placeholder="例如：10年教学经验"
+        value="{{formData.experience}}"
+        bindinput="onExperienceInput"
+        maxlength="20" />
+    </view>
+
+    <!-- 状态开关 -->
+    <view class="form-item switch-item">
+      <text class="form-label">开启预约</text>
+      <switch
+        class="form-switch"
+        checked="{{formData.status === 1}}"
+        bindchange="onStatusChange"
+        color="#667eea" />
+      <text class="switch-hint">关闭后学生将无法看到您</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="save-btn" bindtap="saveProfile" disabled="{{saving}}">
+      {{saving ? '保存中...' : '保存资料'}}
+    </button>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips">
+    <text class="tips-title">温馨提示：</text>
+    <text class="tips-text">• 完善资料后，学生才能看到您的信息</text>
+    <text class="tips-text">• 请上传真实头像，增加信任度</text>
+    <text class="tips-text">• 专长标签建议：网球基础、发球技术、战术指导等</text>
+  </view>
+</view>
