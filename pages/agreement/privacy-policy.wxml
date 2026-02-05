@@ -3,83 +3,91 @@
   <view class="agreement-content">
     <view class="agreement-title">隐私政策</view>
 
+    <view class="policy-badge">
+      <text class="badge-text">纯免费 · 无手机号版</text>
+    </view>
+
     <view class="agreement-intro">
-      <text class="intro-text">"挥拍GO"（以下简称"我们"）非常重视用户的隐私保护和个人信息保护。本隐私政策将帮助您了解我们收集、使用、存储和共享个人信息的情形。</text>
+      <text class="intro-text">生效日期：2026年2月4日</text>
+      <text class="intro-text">"挥拍GO"（以下简称"我们"）尊重并保护您的隐私。本政策说明我们在您使用免费预约服务时如何处理您的个人信息。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">一、我们收集的信息</text>
-      <text class="section-content">1.1 基本信息</text>
-      <text class="section-content">- 微信昵称、头像：用于用户身份展示</text>
-      <text class="section-content">- 手机号码：用于订单通知和服务联系（需用户主动授权）</text>
-      <text class="section-content">1.2 订单信息</text>
-      <text class="section-content">- 预约记录、课程时间、教练信息等</text>
-      <text class="section-content">1.3 设备信息</text>
-      <text class="section-content">- 设备型号、操作系统版本、唯一设备标识符等</text>
-      <text class="section-content">1.4 日志信息</text>
-      <text class="section-content">- 使用记录、操作日志等</text>
+      <text class="section-title">一、我们收集的信息及用途</text>
+      <text class="section-content">为提供核心服务，我们仅通过微信授权获取以下必要信息：</text>
+      <view class="info-table">
+        <view class="table-header">
+          <text class="table-cell">信息类型</text>
+          <text class="table-cell">收集方式</text>
+          <text class="table-cell">使用目的</text>
+          <text class="table-cell">法律依据</text>
+        </view>
+        <view class="table-row">
+          <text class="table-cell">微信昵称</text>
+          <text class="table-cell">微信授权登录时获取</text>
+          <text class="table-cell">显示用户身份</text>
+          <text class="table-cell">履行合同所必需</text>
+        </view>
+        <view class="table-row">
+          <text class="table-cell">微信头像</text>
+          <text class="table-cell">微信授权登录时获取</text>
+          <text class="table-cell">个性化界面展示</text>
+          <text class="table-cell">履行合同所必需</text>
+        </view>
+        <view class="table-row">
+          <text class="table-cell">OpenID（微信唯一标识）</text>
+          <text class="table-cell">微信授权登录时获取</text>
+          <text class="table-cell">用户身份识别、防止重复预约、管理预约记录</text>
+          <text class="table-cell">履行合同所必需</text>
+        </view>
+      </view>
+      <view class="notice-box">
+        <text class="notice-title">✅ 我们不会收集：</text>
+        <text class="notice-content">手机号、身份证号、地理位置、设备通讯录、短信等任何其他个人信息。</text>
+      </view>
+      <view class="notice-box">
+        <text class="notice-title">✅ 我们不会：</text>
+        <text class="notice-content">向第三方共享、出售或用于广告推送、用户画像等目的。</text>
+      </view>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">二、信息的使用</text>
-      <text class="section-content">2.1 我们使用收集的信息用于：</text>
-      <text class="section-content">- 提供网球教学预约和管理服务</text>
-      <text class="section-content">- 处理订单和交易</text>
-      <text class="section-content">- 发送服务通知和消息推送</text>
-      <text class="section-content">- 改进产品功能和用户体验</text>
-      <text class="section-content">- 保障账号安全和交易安全</text>
+      <text class="section-title">二、信息存储与安全</text>
+      <text class="section-list">• 存储地点：中国境内服务器</text>
+      <text class="section-list">• 存储期限：预约记录保留至课程结束后6个月，之后自动删除或匿名化</text>
+      <text class="section-list">• 安全措施：采用HTTPS加密传输、访问权限控制等技术保障数据安全</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">三、信息的共享</text>
-      <text class="section-content">3.1 除以下情形外，我们不会与第三方共享您的个人信息：</text>
-      <text class="section-content">- 获得您的明确同意</text>
-      <text class="section-content">- 根据法律法规或政府主管部门要求</text>
-      <text class="section-content">- 为维护我们的合法权益</text>
-      <text class="section-content">- 与关联公司或合作伙伴共享（仅限于提供服务所需范围）</text>
+      <text class="section-title">三、信息共享</text>
+      <text class="section-content">我们不会向任何第三方共享您的个人信息，除非：</text>
+      <text class="section-list">• 法律法规明确要求</text>
+      <text class="section-list">• 为履行预约服务必须向课程提供方（如合作机构）提供最小必要信息（如昵称、预约课程名称），且已采取保密约束</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">四、信息的存储</text>
-      <text class="section-content">4.1 我们将在中华人民共和国境内存储您的个人信息。</text>
-      <text class="section-content">4.2 我们仅在实现本政策所述目的所需的期间内保留您的个人信息。</text>
-      <text class="section-content">4.3 我们采取合理的技术措施保护您的信息安全。</text>
+      <text class="section-title">四、您的权利</text>
+      <text class="section-content">您可通过小程序"我的 → 设置"行使以下权利：</text>
+      <text class="section-list">• 查看或删除预约记录</text>
+      <text class="section-list">• 注销账号（路径：【我的】→【账号与安全】→【注销账号】）</text>
+      <text class="section-content">注销后，我们将删除您的所有个人信息（法律法规另有规定的除外）。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">五、您的权利</text>
-      <text class="section-content">5.1 您对个人信息享有以下权利：</text>
-      <text class="section-content">- 访问和获取您的个人信息副本</text>
-      <text class="section-content">- 更正或补充您的个人信息</text>
-      <text class="section-content">- 删除您的个人信息</text>
-      <text class="section-content">- 撤回您的授权同意</text>
-      <text class="section-content">- 注销您的账号</text>
+      <text class="section-title">五、未成年人保护</text>
+      <text class="section-content">本小程序主要面向成年人。如您未满14周岁，请在监护人指导下使用。我们不会主动收集儿童个人信息。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">六、未成年人保护</text>
-      <text class="section-content">6.1 我们非常重视对未成年人个人信息的保护。</text>
-      <text class="section-content">6.2 如果您是未成年人，请在监护人的指导下使用我们的服务。</text>
-      <text class="section-content">6.3 我们不会主动收集未成年人的个人信息。</text>
-    </view>
-
-    <view class="agreement-section">
-      <text class="section-title">七、政策的变更</text>
-      <text class="section-content">7.1 我们可能适时修订本隐私政策。</text>
-      <text class="section-content">7.2 修订后的政策将在小程序内公布。</text>
-      <text class="section-content">7.3 如您不同意修订后的政策，可以停止使用本服务。</text>
-    </view>
-
-    <view class="agreement-section">
-      <text class="section-title">八、联系我们</text>
-      <text class="section-content">如您对本隐私政策或个人信息保护有任何疑问、意见或建议，请通过以下方式联系我们：</text>
-      <text class="section-content">- 小程序内反馈功能</text>
-      <text class="section-content">- 官方客服联系方式</text>
-      <text class="section-content">我们将在15个工作日内回复您的请求。</text>
+      <text class="section-title">六、联系我们</text>
+      <text class="section-content">如对本政策有疑问，请联系：</text>
+      <text class="section-list">运营主体：【您的公司全称】</text>
+      <text class="section-list">联系邮箱：your_email@example.com</text>
+      <text class="section-list">地址：【公司注册地址】</text>
     </view>
 
     <view class="update-time">
-      <text>更新日期：2025年1月</text>
+      <text>更新日期：2026年2月4日</text>
     </view>
   </view>
 </view>

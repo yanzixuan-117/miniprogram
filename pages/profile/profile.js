@@ -362,6 +362,13 @@ Page({
     })
   },
 
+  // 账号注销
+  goToAccountDelete: function() {
+    wx.navigateTo({
+      url: '/pages/account/delete'
+    })
+  },
+
   // 退出登录
   handleLogout: async function() {
     var confirm = await util.showConfirm('确定要退出登录吗？')

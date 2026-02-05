@@ -78,6 +78,30 @@
 
   <!-- 教练视图 -->
   <view class="coach-view" wx:if="{{currentView === 'coach'}}">
+    <!-- 订阅消息提示 -->
+    <view class="subscribe-tip" wx:if="{{!hasSubscribed}}">
+      <view class="tip-content">
+        <text class="tip-icon">🔔</text>
+        <view class="tip-text-wrapper">
+          <text class="tip-text">开启消息通知，及时接收新预约申请</text>
+          <text class="tip-hint">💡 授权时请勾选"保持以上选择"，可长期接收通知</text>
+        </view>
+        <button class="subscribe-btn" size="mini" bindtap="subscribeMessages">立即开启</button>
+      </view>
+    </view>
+
+    <!-- 需要重新授权提示 -->
+    <view class="subscribe-tip resubscribe-tip" wx:if="{{needReSubscribe}}">
+      <view class="tip-content">
+        <text class="tip-icon">⚠️</text>
+        <view class="tip-text-wrapper">
+          <text class="tip-text">您的订阅消息已失效，无法接收新预约通知</text>
+          <text class="tip-hint">💡 请点击重新授权，并务必勾选"保持以上选择"</text>
+        </view>
+        <button class="subscribe-btn" size="mini" bindtap="requestCoachSubscription">重新授权</button>
+      </view>
+    </view>
+
     <!-- 状态筛选 -->
     <scroll-view class="status-tabs" scroll-x enhanced show-scrollbar="{{false}}">
       <view class="tab-item {{coachActiveStatus === '' ? 'active' : ''}}" bindtap="selectCoachStatus" data-status="">

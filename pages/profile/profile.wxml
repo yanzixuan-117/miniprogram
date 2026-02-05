@@ -184,6 +184,12 @@
         <text class="menu-text">关于我们</text>
         <text class="arrow">></text>
       </view>
+
+      <view class="menu-item account-delete" bindtap="goToAccountDelete">
+        <view class="menu-icon delete-icon">🗑️</view>
+        <text class="menu-text delete-text">账号注销</text>
+        <text class="arrow">></text>
+      </view>
     </view>
 
     <!-- 退出登录 -->

@@ -1,0 +1,104 @@
+<!-- 账号注销页面 -->
+<view class="container">
+  <view class="delete-content">
+    <!-- 标题区 -->
+    <view class="header">
+      <text class="icon">⚠️</text>
+      <text class="title">账号注销</text>
+      <text class="subtitle">请仔细阅读以下内容</text>
+    </view>
+
+    <!-- 注销须知 -->
+    <view class="notice-section">
+      <view class="section-title">
+        <text class="title-icon">📋</text>
+        <text>注销须知</text>
+      </view>
+      <view class="notice-list">
+        <view class="notice-item">
+          <text class="bullet">1.</text>
+          <text class="text">账号注销后，您的所有个人信息将被删除，包括：</text>
+        </view>
+        <view class="notice-sub-list">
+          <text class="sub-item">• 微信昵称、头像等基本信息</text>
+          <text class="sub-item">• 所有预约记录</text>
+          <text class="sub-item">• 课程学习记录</text>
+          <text class="sub-item">• 收藏的视频</text>
+        </view>
+        <view class="notice-item">
+          <text class="bullet">2.</text>
+          <text class="text">数据删除后将无法恢复，请谨慎操作</text>
+        </view>
+        <view class="notice-item">
+          <text class="bullet">3.</text>
+          <text class="text">如有未完成的课程，请先处理后再注销</text>
+        </view>
+        <view class="notice-item">
+          <text class="bullet">4.</text>
+          <text class="text">注销后可重新注册，但无法找回历史数据</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="stats-section" wx:if="{{hasData}}">
+      <view class="section-title">
+        <text class="title-icon">📊</text>
+        <text>您的数据</text>
+      </view>
+      <view class="stats-grid">
+        <view class="stat-card">
+          <text class="stat-number">{{stats.bookings}}</text>
+          <text class="stat-label">预约记录</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-number">{{stats.sessions}}</text>
+          <text class="stat-label">课程记录</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-number">{{stats.favorites}}</text>
+          <text class="stat-label">收藏视频</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 确认复选框 -->
+    <view class="confirm-section">
+      <view class="checkbox-item" bindtap="toggleConfirm1">
+        <view class="checkbox {{confirmed1 ? 'checked' : ''}}">
+          <text wx:if="{{confirmed1}}">✓</text>
+        </view>
+        <text class="checkbox-text">我已知晓注销后所有数据将被删除且无法恢复</text>
+      </view>
+      <view class="checkbox-item" bindtap="toggleConfirm2">
+        <view class="checkbox {{confirmed2 ? 'checked' : ''}}">
+          <text wx:if="{{confirmed2}}">✓</text>
+        </view>
+        <text class="checkbox-text">我已确认处理完所有未完成的课程</text>
+      </view>
+      <view class="checkbox-item" bindtap="toggleConfirm3">
+        <view class="checkbox {{confirmed3 ? 'checked' : ''}}">
+          <text wx:if="{{confirmed3}}">✓</text>
+        </view>
+        <text class="checkbox-text">我仍要注销账号</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="button-group">
+      <button class="cancel-btn" bindtap="goBack">我再想想</button>
+      <button
+        class="delete-btn {{canDelete ? '' : 'disabled'}}"
+        bindtap="handleDelete"
+        disabled="{{!canDelete}}">
+        确认注销
+      </button>
+    </view>
+
+    <!-- 联系客服 -->
+    <view class="contact-section">
+      <text class="contact-text">如有疑问，请联系客服</text>
+      <text class="contact-email">yanzixuan@live.cn</text>
+    </view>
+  </view>
+</view>

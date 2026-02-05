@@ -143,5 +143,42 @@ Page({
     setTimeout(function() {
       wx.stopPullDownRefresh()
     }, 1000)
+  },
+
+  // 图片加载失败处理 - 尝试重新获取临时URL
+  onImageError: function(e) {
+    var self = this
+    var index = e.currentTarget.dataset.index
+    var cloudUrl = e.currentTarget.dataset.cloudurl
+
+    // 如果有云存储URL，尝试重新获取临时URL
+    if (cloudUrl && cloudUrl.startsWith('cloud://')) {
+      wx.cloud.getTempFileURL({
+        fileList: [cloudUrl]
+      }).then(function(res) {
+        if (res.fileList && res.fileList[0] && res.fileList[0].status === 0) {
+          var tempUrl = res.fileList[0].tempFileURL
+          var filteredList = self.data.filteredList
+          filteredList[index].avatarUrl = tempUrl
+          self.setData({ filteredList: filteredList })
+        } else {
+          // 获取失败，使用默认头像
+          var filteredList = self.data.filteredList
+          filteredList[index].avatarUrl = '/images/avatar.png'
+          self.setData({ filteredList: filteredList })
+        }
+      }).catch(function(err) {
+        console.error('重新获取临时URL失败:', err)
+        // 失败时使用默认头像
+        var filteredList = self.data.filteredList
+        filteredList[index].avatarUrl = '/images/avatar.png'
+        self.setData({ filteredList: filteredList })
+      })
+    } else {
+      // 没有云存储URL，直接使用默认头像
+      var filteredList = this.data.filteredList
+      filteredList[index].avatarUrl = '/images/avatar.png'
+      this.setData({ filteredList: filteredList })
+    }
   }
 })

@@ -113,11 +113,15 @@
         <scroll-view class="coach-scroll" scroll-x enhanced show-scrollbar="{{false}}">
           <view class="coach-list">
             <view class="coach-card" wx:for="{{recommendedCoaches}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
-              <image class="coach-avatar" src="{{item.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+              <image class="coach-avatar"
+                     src="{{item.cloudAvatarUrl || item.avatarUrl || '/images/avatar.png'}}"
+                     mode="aspectFill"
+                     binderror="onImageError"
+                     data-index="{{index}}"
+                     data-cloudurl="{{item.cloudAvatarUrl}}"
+                     data-type="coach">
+              </image>
               <text class="coach-name">{{item.name || '教练'}}</text>
-              <view class="coach-tags">
-                <text class="tag">{{item.specialty && item.specialty[0] ? item.specialty[0] : '网球教学'}}</text>
-              </view>
               <view class="coach-rating">
                 <text class="star">⭐</text>
                 <text class="rating">{{item.rating || '5.0'}}</text>

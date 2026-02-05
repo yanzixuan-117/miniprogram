@@ -17,17 +17,26 @@
         <!-- 头像 -->
         <image wx:if="{{item.avatarUrl}}"
                class="coach-avatar"
-               src="{{item.avatarUrl}}"
+               src="{{item.cloudAvatarUrl || item.avatarUrl}}"
                mode="aspectFill"
                binderror="onImageError"
-               data-url="{{item.avatarUrl}}"
-               data-name="{{item.name || item.nickname}}"
-               data-index="{{index}}">
+               data-index="{{index}}"
+               data-cloudurl="{{item.cloudAvatarUrl}}">
         </image>
         <view wx:else class="coach-avatar default-avatar">👨‍🏫</view>
         <view class="coach-detail">
           <view class="coach-name-row">
-            <text class="coach-name">{{item.name || item.nickname || '未设置姓名'}}</text>
+            <!-- 显示状态 -->
+            <block wx:if="{{editingCoachId !== item._id}}">
+              <text class="coach-name">{{item.name || item.nickname || '未设置姓名'}}</text>
+              <text class="edit-name-btn" catchtap="startEditName" data-id="{{item._id}}" data-name="{{item.name || item.nickname}}">✏️</text>
+            </block>
+            <!-- 编辑状态 -->
+            <block wx:else>
+              <input class="name-input" value="{{editingName}}" bindinput="onNameInput" catchtap="" placeholder="输入昵称" />
+              <text class="save-name-btn" catchtap="saveName" data-id="{{item._id}}">✓</text>
+              <text class="cancel-name-btn" catchtap="cancelEdit">✗</text>
+            </block>
             <view class="status-badge status-{{item.status}}">
               <text>{{item.status === 1 ? '启用' : '禁用'}}</text>
             </view>
@@ -45,6 +54,10 @@
         </view>
       </view>
       <view class="coach-actions">
+        <!-- 排序按钮 -->
+        <button class="action-btn move-btn" catchtap="moveUp" data-index="{{index}}" wx:if="{{index > 0}}">↑ 上移</button>
+        <button class="action-btn move-btn" catchtap="moveDown" data-index="{{index}}" wx:if="{{index < coachList.length - 1}}">↓ 下移</button>
+        <!-- 操作按钮 -->
         <button class="action-btn edit" catchtap="goToEditCoach" data-id="{{item._id}}">编辑</button>
         <button class="action-btn toggle" catchtap="toggleStatus" data-id="{{item._id}}" data-status="{{item.status}}">
           {{item.status === 1 ? '禁用' : '启用'}}

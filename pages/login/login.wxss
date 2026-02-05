@@ -361,6 +361,7 @@
 }
 
 .agreement-text {
+    display: inline-flex;
     font-size: 26rpx;
     color: #666;
     line-height: 1.5;

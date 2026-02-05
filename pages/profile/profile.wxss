@@ -352,3 +352,17 @@
   color: #ccc;
   margin-bottom: 8rpx;
 }
+
+/* 账号注销菜单项 */
+.account-delete {
+  margin-top: 16rpx;
+  background: #fff5f5;
+}
+
+.delete-icon {
+  color: #f5222d;
+}
+
+.delete-text {
+  color: #f5222d;
+}

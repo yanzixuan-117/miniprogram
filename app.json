@@ -4,6 +4,7 @@
     "pages/login/login",
     "pages/agreement/user-agreement",
     "pages/agreement/privacy-policy",
+    "pages/account/delete",
     "pages/profile/profile",
     "pages/profile/edit",
     "pages/coaches/list",

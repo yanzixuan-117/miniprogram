@@ -9,7 +9,13 @@
   <view class="coach-list" wx:if="{{!loading && coachList.length > 0}}">
     <view class="coach-card" wx:for="{{coachList}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
       <!-- 教练头像 -->
-      <image lazy-load class="coach-avatar" src="{{item.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+      <image lazy-load class="coach-avatar"
+             src="{{item.cloudAvatarUrl || item.avatarUrl || '/images/avatar.png'}}"
+             mode="aspectFill"
+             binderror="onImageError"
+             data-index="{{index}}"
+             data-cloudurl="{{item.cloudAvatarUrl}}">
+      </image>
 
       <!-- 教练信息 -->
       <view class="coach-info">
@@ -24,9 +30,9 @@
 
         <!-- 专长标签 -->
         <view class="coach-tags" wx:if="{{item.specialty && item.specialty.length > 0}}">
-          <text class="tag" wx:for="{{item.specialty}}" wx:key="index" wx:for-item="specialty">
+          <view class="tag" wx:for="{{item.specialty}}" wx:key="index" wx:for-item="specialty">
             {{specialty}}
-          </text>
+          </view>
         </view>
 
         <!-- 简介 -->

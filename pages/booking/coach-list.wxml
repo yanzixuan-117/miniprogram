@@ -25,7 +25,13 @@
         <view class="card-content">
           <!-- 教练头像 -->
           <view class="avatar-wrapper">
-            <image lazy-load class="coach-avatar" src="{{item.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+            <image lazy-load class="coach-avatar"
+                   src="{{item.cloudAvatarUrl || item.avatarUrl || '/images/avatar.png'}}"
+                   mode="aspectFill"
+                   binderror="onImageError"
+                   data-index="{{index}}"
+                   data-cloudurl="{{item.cloudAvatarUrl}}">
+            </image>
             <!-- <view class="avatar-ring"></view> -->
           </view>
 

@@ -282,6 +282,30 @@ Page({
 
     self.setData({ submitting: true })
 
+    // 请求订阅消息权限
+    wx.requestSubscribeMessage({
+      tmplIds: [
+        '0zah2JhpFWROpt-yud34i9JIyLdubNoTMf8jo7km9N8',     // 预约已确认
+        '5vb0wANKEONrKQ_oTAIFFSTSpXcC8y7y6sGDu2Tp8Ik',      // 预约已拒绝
+        'lw0LVJhfyaZwIR0FFVcmMMZjrFBtlOngUrK-BJpnC6Y'      // 预约已完成
+      ],
+      success: function(res) {
+        console.log('订阅消息授权结果:', res)
+        // 继续提交预约，无论用户是否授权
+        self.doSubmitBooking()
+      },
+      fail: function(err) {
+        console.log('请求订阅消息失败:', err)
+        // 用户拒绝或请求失败，仍然继续提交预约
+        self.doSubmitBooking()
+      }
+    })
+  },
+
+  // 执行提交预约
+  doSubmitBooking: function() {
+    var self = this
+
     util.showLoading('提交中...')
 
     wx.cloud.callFunction({
@@ -300,10 +324,10 @@ Page({
       if (res.result.success) {
         util.showSuccess('预约申请已提交')
 
-        // 延迟跳转到我的预约页面（使用 switchTab 因为是 tabBar 页面）
+        // 延迟跳转到预约中心（tabBar页面）
         setTimeout(function() {
           wx.switchTab({
-            url: '/pages/booking/my-bookings'
+            url: '/pages/booking/booking-hub'
           })
         }, 1500)
       } else {

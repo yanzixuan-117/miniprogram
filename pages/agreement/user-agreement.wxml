@@ -3,59 +3,59 @@
   <view class="agreement-content">
     <view class="agreement-title">用户协议</view>
 
-    <view class="agreement-section">
-      <text class="section-title">一、总则</text>
-      <text class="section-content">1.1 欢迎您使用"挥拍GO"小程序！本协议是您与"挥拍GO"运营方之间就使用"挥拍GO"小程序所订立的协议。</text>
-      <text class="section-content">1.2 请您在使用"挥拍GO"前，仔细阅读本协议的全部内容，特别是免除或者限制责任的条款。</text>
+    <view class="agreement-intro">
+      <text class="intro-text">欢迎使用"挥拍GO"（以下简称"本小程序"）。您在使用本小程序提供的课程预约服务前，请仔细阅读本协议。一旦您开始使用服务，即表示您已充分理解并同意本协议全部内容。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">二、账号注册</text>
-      <text class="section-content">2.1 用户可以通过微信授权登录使用"挥拍GO"。</text>
-      <text class="section-content">2.2 用户应妥善保管自己的账号信息，对使用该账号的所有行为负责。</text>
+      <text class="section-title">一、服务内容</text>
+      <text class="section-content">本小程序为您提供以下完全免费的服务：</text>
+      <text class="section-list">• 浏览课程信息</text>
+      <text class="section-list">• 在线预约课程时段</text>
+      <text class="section-list">• 查看个人预约记录</text>
+      <text class="section-list">• 接收微信服务通知（如开课提醒）</text>
+      <text class="section-content">本小程序不收取任何费用，不提供支付功能，亦不涉及退款。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">三、服务内容</text>
-      <text class="section-content">3.1 "挥拍GO"为用户提供网球教学管理服务，包括但不限于：</text>
-      <text class="section-content">- 网球教练预约</text>
-      <text class="section-content">- 课程时间安排</text>
-      <text class="section-content">- 订单管理</text>
-      <text class="section-content">- 教学视频观看</text>
+      <text class="section-title">二、账号与登录</text>
+      <text class="section-content">您需通过微信授权登录，系统将自动获取您的微信昵称、头像及唯一标识（OpenID），用于识别身份和管理预约。</text>
+      <text class="section-content">您无需提供手机号、身份证号等其他个人信息。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">四、用户行为规范</text>
-      <text class="section-content">4.1 用户在使用本服务时，必须遵守相关法律法规。</text>
-      <text class="section-content">4.2 不得利用本服务从事任何违法违规活动。</text>
-      <text class="section-content">4.3 不得发布虚假信息、恶意信息或侵犯他人权益的内容。</text>
+      <text class="section-title">三、预约规则</text>
+      <text class="section-content">预约成功以小程序内显示"预约成功"为准。</text>
+      <text class="section-content">如需取消，请在课程开始前2小时通过小程序操作，以便释放名额。</text>
+      <text class="section-content">未取消且未出席的，可能影响后续热门课程的预约资格。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">五、隐私保护</text>
-      <text class="section-content">5.1 我们重视用户隐私保护，具体内容请参见《隐私政策》。</text>
-      <text class="section-content">5.2 我们将采取合理措施保护用户的个人信息安全。</text>
+      <text class="section-title">四、用户承诺</text>
+      <text class="section-content">您承诺：</text>
+      <text class="section-list">• 遵守国家法律法规</text>
+      <text class="section-list">• 不恶意占位、刷号或干扰正常预约秩序</text>
+      <text class="section-list">• 不利用本服务从事商业推广、spam或非法活动</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">六、免责声明</text>
-      <text class="section-content">6.1 因不可抗力、网络故障等原因导致服务中断，我们不承担责任。</text>
-      <text class="section-content">6.2 用户自行承担使用本服务产生的风险。</text>
+      <text class="section-title">五、免责声明</text>
+      <text class="section-content">因不可抗力（如网络故障、自然灾害、微信平台限制等）导致服务中断或预约失败，本小程序不承担责任。</text>
+      <text class="section-content">课程安排如有临时调整，我们将尽力通知，但不承担因此产生的损失。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">七、协议修改</text>
-      <text class="section-content">7.1 我们有权根据需要修改本协议，修改后的协议将在小程序内公布。</text>
-      <text class="section-content">7.2 如您不同意修改后的协议，可以停止使用本服务。</text>
+      <text class="section-title">六、协议修改</text>
+      <text class="section-content">我们有权更新本协议，更新后将通过小程序公告告知。继续使用即视为接受。</text>
     </view>
 
     <view class="agreement-section">
-      <text class="section-title">八、联系方式</text>
-      <text class="section-content">如您对本协议有任何疑问，请通过小程序内提供的联系方式与我们联系。</text>
+      <text class="section-title">七、法律适用</text>
+      <text class="section-content">本协议适用中华人民共和国法律。争议协商不成的，提交运营方所在地有管辖权的人民法院解决。</text>
     </view>
 
     <view class="update-time">
-      <text>更新日期：2025年1月</text>
+      <text>生效日期：2026年2月4日</text>
     </view>
   </view>
 </view>

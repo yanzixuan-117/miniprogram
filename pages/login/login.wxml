@@ -63,12 +63,12 @@
             <view class="agreement-section">
                 <label class="agreement-checkbox" bindtap="toggleAgreement">
                     <checkbox class="checkbox" checked="{{agreedToTerms}}" disabled="{{loading}}"/>
-                    <text class="agreement-text">
+                    <view class="agreement-text">
                         我已阅读并同意
                         <text class="agreement-link" catchtap="viewUserAgreement">《用户协议》</text>
                         和
                         <text class="agreement-link" catchtap="viewPrivacyPolicy">《隐私政策》</text>
-                    </text>
+                    </view>
                 </label>
             </view>
 

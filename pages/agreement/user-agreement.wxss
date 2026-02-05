@@ -42,6 +42,30 @@
   text-align: justify;
 }
 
+.section-list {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 8rpx;
+  padding-left: 20rpx;
+}
+
+.agreement-intro {
+  margin-bottom: 48rpx;
+  padding: 24rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.intro-text {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.8;
+  text-align: justify;
+}
+
 .update-time {
   text-align: center;
   padding-top: 32rpx;

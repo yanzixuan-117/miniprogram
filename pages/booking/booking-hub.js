@@ -14,7 +14,11 @@ Page({
     // 教练数据
     coachBookings: [],
     coachActiveStatus: '',
-    coachLoading: false
+    coachLoading: false,
+
+    // 订阅标记
+    hasSubscribed: false,
+    needReSubscribe: false // 是否需要重新授权
   },
 
   onLoad: function() {
@@ -163,7 +167,14 @@ Page({
         return
       }
 
-      var coachId = coachRes.data[0]._id
+      var coachData = coachRes.data[0]
+      var coachId = coachData._id
+
+      // 检查是否需要重新授权订阅消息
+      if (coachData.needReSubscribe) {
+        console.log('检测到教练需要重新授权订阅消息')
+        this.setData({ needReSubscribe: true })
+      }
       var where = { coachId: coachId }
 
       if (this.data.coachActiveStatus) {
@@ -352,7 +363,7 @@ Page({
         data: {
           action: 'reject',
           bookingId: id,
-          reason: '时间冲突'
+          rejectReason: '时间冲突'
         }
       })
 
@@ -381,6 +392,113 @@ Page({
   goToBooking: function() {
     wx.navigateTo({
       url: '/pages/booking/coach-list'
+    })
+  },
+
+  // 点击按钮订阅消息（用户主动点击）
+  subscribeMessages: function() {
+    var self = this
+    console.log('=================================')
+    console.log('请求教练订阅消息授权')
+    console.log('提示：请在授权窗口勾选"保持以上选择，下次不再询问"以开启长期订阅')
+    console.log('=================================')
+
+    wx.requestSubscribeMessage({
+      tmplIds: [
+        'llGk7fAnowILwT_v9l2anVgBfdM3qhI9I04brQw02Z8', // 新预约申请
+        'ZK-LyT1dghS8lT_c5j3y7QS3p_GiKhXoWIHmovPbFi4'  // 预约已取消
+      ],
+      success: function(res) {
+        console.log('教练订阅消息授权结果:', res)
+        var hasAccept = false
+        for (var tmplId in res) {
+          if (res.hasOwnProperty(tmplId) && res[tmplId] === 'accept') {
+            hasAccept = true
+            console.log('✅ 模板 ' + tmplId + ' 授权成功')
+            break
+          }
+        }
+        if (hasAccept) {
+          self.setData({
+            hasSubscribed: true,
+            needReSubscribe: false
+          })
+          console.log('✅ 教练已授权订阅消息')
+          wx.showToast({
+            title: '订阅成功',
+            icon: 'success'
+          })
+
+          // 清除数据库中的重新授权标记
+          wx.cloud.callFunction({
+            name: 'updateCoachSubscribe',
+            data: {
+              needReSubscribe: false
+            }
+          }).then(function() {
+            console.log('✅ 已清除重新授权标记')
+          }).catch(function(err) {
+            console.log('⚠️ 清除重新授权标记失败:', err)
+          })
+        } else {
+          console.log('⚠️ 教练未授权订阅消息')
+        }
+      },
+      fail: function(err) {
+        console.log('❌ 请求教练订阅消息失败:', err)
+      }
+    })
+  },
+
+  // 教练请求订阅消息授权（需要用户点击按钮触发）
+  requestCoachSubscription: function() {
+    var self = this
+    console.log('=================================')
+    console.log('请求教练订阅消息授权')
+    console.log('提示：请在授权窗口勾选"保持以上选择，下次不再询问"以开启长期订阅')
+    console.log('长期订阅可多次接收通知，无需重复授权')
+    console.log('=================================')
+
+    wx.requestSubscribeMessage({
+      tmplIds: [
+        'llGk7fAnowILwT_v9l2anVgBfdM3qhI9I04brQw02Z8', // 新预约申请
+        'ZK-LyT1dghS8lT_c5j3y7QS3p_GiKhXoWIHmovPbFi4'  // 预约已取消
+      ],
+      success: function(res) {
+        console.log('教练订阅授权结果:', res)
+        var hasAccept = false
+        for (var tmplId in res) {
+          if (res.hasOwnProperty(tmplId) && res[tmplId] === 'accept') {
+            hasAccept = true
+            console.log('✅ 模板 ' + tmplId + ' 授权成功')
+            break
+          }
+        }
+        if (hasAccept) {
+          self.setData({
+            hasSubscribed: true,
+            needReSubscribe: false
+          })
+          console.log('✅ 教练已授权订阅消息')
+
+          // 清除数据库中的重新授权标记
+          wx.cloud.callFunction({
+            name: 'updateCoachSubscribe',
+            data: {
+              needReSubscribe: false
+            }
+          }).then(function() {
+            console.log('✅ 已清除重新授权标记')
+          }).catch(function(err) {
+            console.log('⚠️ 清除重新授权标记失败:', err)
+          })
+        } else {
+          console.log('⚠️ 教练未授权订阅消息')
+        }
+      },
+      fail: function(err) {
+        console.log('❌ 教练订阅授权失败:', err)
+      }
     })
   },
 

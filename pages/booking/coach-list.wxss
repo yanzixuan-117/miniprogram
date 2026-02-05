@@ -175,17 +175,18 @@
 .coach-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8rpx;
+  gap: 12rpx;
 }
 
 .coach-tags .tag {
-  padding: 8rpx 16rpx;
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  color: #2e7d32;
+  padding: 6rpx 16rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   font-size: 22rpx;
+  line-height: 1.4;
   border-radius: 24rpx;
   font-weight: 500;
-  box-shadow: 0 2rpx 6rpx rgba(46, 125, 50, 0.1);
+  box-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.3);
 }
 
 /* 元信息 */
