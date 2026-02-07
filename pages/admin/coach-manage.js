@@ -1,13 +1,11 @@
-// pages/admin/coach-manage/coach-manage.js
-const util = require('../../../../utils/util.js')
+// pages/admin/coach-manage.js
+const util = require('../../utils/util.js')
 
 Page({
   data: {
     coachList: [],
     loading: false,
-    keyword: '',
-    editingCoachId: null,  // 正在编辑昵称的教练ID
-    editingName: ''         // 正在编辑的昵称
+    keyword: ''
   },
 
   onLoad() {
@@ -22,10 +20,23 @@ Page({
   checkAdminPermission() {
     const app = getApp()
 
+    // 重新从 storage 加载用户信息以确保数据最新
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      app.globalData.userInfo = userInfo
+      app.globalData.userRole = userInfo.role
+      app.globalData.hasLogin = true
+    }
+
+    // 调试：打印用户角色信息
+    console.log('=== 教练管理权限检查 ===')
+    console.log('userRole:', app.globalData.userRole)
+    console.log('userInfo.role:', userInfo ? userInfo.role : 'null')
+
     if (!app.isAdmin()) {
       wx.showModal({
         title: '权限提示',
-        content: '此功能仅限管理员访问',
+        content: '此功能仅限管理员访问\n当前角色：' + (app.globalData.userRole || '未登录'),
         showCancel: false,
         success: () => {
           wx.navigateBack()
@@ -57,6 +68,9 @@ Page({
           const orderB = b.order !== undefined ? b.order : 999
           return orderA - orderB
         })
+
+        // 批量转换教练头像云存储URL为临时URL（统一使用 util 工具函数）
+        coachList = await util.processListCloudURLs(coachList, ['cloudAvatarUrl', 'avatarUrl'], '', true)
 
         this.setData({
           coachList: coachList
@@ -177,71 +191,6 @@ Page({
       }
     } catch (err) {
       wx.showToast({ title: '更新失败', icon: 'none' })
-    } finally {
-      wx.hideLoading()
-    }
-  },
-
-  // 开始编辑昵称
-  startEditName(e) {
-    const { id, name } = e.currentTarget.dataset
-    this.setData({
-      editingCoachId: id,
-      editingName: name || ''
-    })
-  },
-
-  // 昵称输入
-  onNameInput(e) {
-    this.setData({
-      editingName: e.detail.value
-    })
-  },
-
-  // 取消编辑
-  cancelEdit() {
-    this.setData({
-      editingCoachId: null,
-      editingName: ''
-    })
-  },
-
-  // 保存昵称
-  async saveName(e) {
-    const { id } = e.currentTarget.dataset
-    const name = this.data.editingName.trim()
-
-    if (!name) {
-      wx.showToast({ title: '请输入昵称', icon: 'none' })
-      return
-    }
-
-    wx.showLoading({ title: '保存中...' })
-
-    try {
-      const res = await wx.cloud.callFunction({
-        name: 'manageCoach',
-        data: {
-          action: 'update',
-          coachId: id,
-          coachData: {
-            name: name
-          }
-        }
-      })
-
-      if (res.result && res.result.success) {
-        wx.showToast({ title: '保存成功', icon: 'success' })
-        this.setData({
-          editingCoachId: null,
-          editingName: ''
-        })
-        this.loadCoachList()
-      } else {
-        wx.showToast({ title: res.result?.message || '保存失败', icon: 'none' })
-      }
-    } catch (err) {
-      wx.showToast({ title: '保存失败', icon: 'none' })
     } finally {
       wx.hideLoading()
     }
@@ -377,20 +326,20 @@ Page({
         } else {
           // 获取失败，使用默认头像
           const coachList = [...this.data.coachList]
-          coachList[index].avatarUrl = '/images/avatar.png'
+          coachList[index].avatarUrl = ''
           this.setData({ coachList })
         }
       }).catch((err) => {
         console.error('重新获取临时URL失败:', err)
         // 失败时使用默认头像
         const coachList = [...this.data.coachList]
-        coachList[index].avatarUrl = '/images/avatar.png'
+        coachList[index].avatarUrl = ''
         this.setData({ coachList })
       })
     } else {
       // 没有云存储URL，直接使用默认头像
       const coachList = [...this.data.coachList]
-      coachList[index].avatarUrl = '/images/avatar.png'
+      coachList[index].avatarUrl = ''
       this.setData({ coachList })
     }
   }

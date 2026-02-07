@@ -32,11 +32,11 @@ Page({
   // 计算安全的头像URL
   getSafeAvatarUrl: function(url) {
     if (!url || !url.trim()) {
-      return '/images/avatar.png'
+      return ''
     }
-    // 如果是云存储URL，返回默认图片
+    // 如果是云存储URL，返回空字符串
     if (url.indexOf('cloud://') !== -1) {
-      return '/images/avatar.png'
+      return ''
     }
     return url
   },
@@ -93,7 +93,7 @@ Page({
         // 如果云函数返回的仍是 cloud://，则使用默认图片
         coachInfo.avatarUrl = (coachData.avatarUrl && coachData.avatarUrl.indexOf('cloud://') !== 0)
           ? coachData.avatarUrl
-          : '/images/avatar.png'
+          : ''
 
         self.setData({
           coachInfo: coachInfo

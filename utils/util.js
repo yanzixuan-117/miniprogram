@@ -382,13 +382,13 @@ var isCacheValid = function (cacheItem) {
 /**
  * 处理单个云存储图片URL
  * @param {string} url - 原始URL
- * @param {string} defaultUrl - 默认URL，默认为 '/images/avatar.png'
+ * @param {string} defaultUrl - 默认URL，默认为 ''
  * @param {boolean} useCache - 是否使用缓存，默认为 true
  * @returns {Promise<string>} 返回处理后的URL
  */
 var processCloudImageURL = function (url, defaultUrl, useCache) {
   if (defaultUrl === undefined || defaultUrl === null) {
-    defaultUrl = '/images/avatar.png'
+    defaultUrl = ''
   }
   if (useCache === undefined || useCache === null) {
     useCache = true
@@ -406,15 +406,20 @@ var processCloudImageURL = function (url, defaultUrl, useCache) {
 
   // 如果使用缓存且缓存中存在且未过期，直接返回
   if (useCache && cloudURLCache[url] && isCacheValid(cloudURLCache[url])) {
+    console.log('[processCloudImageURL] 缓存命中:', url.substring(0, 40) + '...')
     return Promise.resolve(cloudURLCache[url].tempUrl)
   }
+
+  console.log('[processCloudImageURL] 开始转换:', url.substring(0, 40) + '...')
 
   // 转换云存储URL
   return wx.cloud.getTempFileURL({
     fileList: [url]
   }).then(function (res) {
+    console.log('[processCloudImageURL] 转换响应:', res)
     if (res.fileList && res.fileList[0]) {
       var fileData = res.fileList[0]
+      console.log('[processCloudImageURL] fileData:', fileData)
       if (fileData.status === 0 && fileData.tempFileURL) {
         // 缓存结果（包含时间戳）
         if (useCache) {
@@ -423,11 +428,16 @@ var processCloudImageURL = function (url, defaultUrl, useCache) {
             timestamp: Date.now()
           }
         }
+        console.log('[processCloudImageURL] 转换成功:', fileData.tempFileURL.substring(0, 60) + '...')
         return fileData.tempFileURL
+      } else {
+        console.error('[processCloudImageURL] status !== 0:', fileData.status, fileData.errMsg)
       }
     }
+    console.warn('[processCloudImageURL] 转换失败，返回默认URL')
     return defaultUrl
-  }).catch(function () {
+  }).catch(function (err) {
+    console.error('[processCloudImageURL] 转换异常:', err)
     return defaultUrl
   })
 }
@@ -445,7 +455,7 @@ var processCloudImageURLs = function (urls, defaultUrl, useCache) {
   }
 
   if (defaultUrl === undefined || defaultUrl === null) {
-    defaultUrl = '/images/avatar.png'
+    defaultUrl = ''
   }
   if (useCache === undefined || useCache === null) {
     useCache = true
@@ -537,6 +547,7 @@ var processObjectCloudURLs = function (obj, fields, defaultUrl, useCache) {
     if (url && typeof url === 'string' && url.indexOf('cloud://') === 0) {
       return processCloudImageURL(url, defaultUrl, useCache).then(function (processedUrl) {
         obj[field] = processedUrl
+        console.log('[processObjectCloudURLs] 字段', field, '转换:', url.substring(0, 30) + '...', '->', processedUrl ? processedUrl.substring(0, 50) + '...' : 'empty')
         return processedUrl
       })
     }
@@ -562,7 +573,7 @@ var processListCloudURLs = function (list, fields, defaultUrl, useCache) {
   }
 
   if (defaultUrl === undefined || defaultUrl === null) {
-    defaultUrl = '/images/avatar.png'
+    defaultUrl = ''
   }
   if (useCache === undefined || useCache === null) {
     useCache = true

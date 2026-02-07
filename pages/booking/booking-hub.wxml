@@ -72,7 +72,14 @@
       <text class="empty-icon">📅</text>
       <text class="empty-text">暂无预约记录</text>
       <text class="empty-hint">快去预约一节网球课程吧</text>
-      <button class="go-booking-btn" bindtap="goToBooking">立即预约</button>
+    </view>
+
+    <!-- 学员端：立即预约按钮（常驻） -->
+    <view class="student-booking-btn-wrapper">
+      <button class="student-booking-btn" bindtap="goToSelectBooking">
+        <text class="btn-icon">+</text>
+        <text class="btn-text">预约课程</text>
+      </button>
     </view>
   </view>
 

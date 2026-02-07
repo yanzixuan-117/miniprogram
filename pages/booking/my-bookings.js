@@ -12,7 +12,22 @@ Page({
   onLoad: function() {
     var app = getApp()
     var userInfo = wx.getStorageSync('userInfo') || app.globalData.userInfo
-    var userRole = userInfo && (userInfo.currentRole || userInfo.role) || app.globalData.userRole
+    var userRole = userInfo && userInfo.role || app.globalData.userRole
+
+    // 检查是否是游客
+    if (userRole === 'guest') {
+      wx.showModal({
+        title: '提示',
+        content: '您当前是游客身份，无法查看预约记录。请联系管理员添加为学员。',
+        showCancel: false,
+        success: function() {
+          wx.switchTab({
+            url: '/pages/index/index'
+          })
+        }
+      })
+      return
+    }
 
     this.setData({ userRole: userRole })
     this.loadBookings()
@@ -70,7 +85,7 @@ Page({
 
         // 获取教练信息
         var coachName = '教练'
-        var coachAvatar = '/images/avatar.png'
+        var coachAvatar = ''
 
         try {
           var coachRes = await wx.cloud.callFunction({
@@ -189,6 +204,13 @@ Page({
   goToBooking: function() {
     wx.navigateTo({
       url: '/pages/booking/coach-list'
+    })
+  },
+
+  // 统一预约页面
+  goToSelectBooking: function() {
+    wx.navigateTo({
+      url: '/pages/booking/select-booking'
     })
   },
 

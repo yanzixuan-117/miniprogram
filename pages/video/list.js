@@ -39,6 +39,9 @@ Page({
     this.setData({ loading: true })
 
     try {
+      // 清除图片URL缓存，确保强制转换云存储URL
+      util.clearCloudURLCache()
+
       var page = refresh ? 1 : this.data.page
       var where = {
         status: 1
@@ -51,6 +54,10 @@ Page({
       var res = await util.getList('videos', where, this.data.pageSize, (page - 1) * this.data.pageSize)
 
       var videoList = res.data || []
+
+      // 批量转换视频封面云存储URL为临时URL
+      // 默认图片改为空字符串，避免加载不存在的默认图片
+      videoList = await util.processListCloudURLs(videoList, ['thumbnail'], '', true)
 
       // 格式化数据
       var self = this

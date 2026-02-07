@@ -26,7 +26,7 @@
           <!-- 教练头像 -->
           <view class="avatar-wrapper">
             <image lazy-load class="coach-avatar"
-                   src="{{item.cloudAvatarUrl || item.avatarUrl || '/images/avatar.png'}}"
+                   src="{{item.cloudAvatarUrl || item.avatarUrl }}"
                    mode="aspectFill"
                    binderror="onImageError"
                    data-index="{{index}}"

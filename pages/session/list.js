@@ -7,13 +7,19 @@ Page({
     loading: false,
     activeStatus: '', // ''=全部, 'completed'='已完成', 'pending'='待完成'
     hasMore: true,
-    userRole: ''
+    userRole: '',
+    studentCourses: [] // 学员课程列表
   },
 
   onLoad: function() {
     var app = getApp()
     this.setData({ userRole: app.globalData.userRole })
     this.loadSessions()
+
+    // 如果是学员，加载课程信息
+    if (app.globalData.userRole === 'student') {
+      this.loadStudentCourses()
+    }
   },
 
   onShow: function() {
@@ -21,6 +27,51 @@ Page({
     if (this.data.sessionList.length > 0) {
       this.loadSessions()
     }
+
+    // 如果是学员，刷新课程信息
+    if (this.data.userRole === 'student') {
+      this.loadStudentCourses()
+    }
+  },
+
+  // 加载学员课程信息（仅学员）
+  loadStudentCourses: function() {
+    var self = this
+    var app = getApp()
+    var userInfo = wx.getStorageSync('userInfo') || app.globalData.userInfo
+
+    if (!userInfo || !userInfo._openid) {
+      return
+    }
+
+    var db = wx.cloud.database()
+
+    db.collection('studentCourses')
+      .where({
+        studentOpenid: userInfo._openid,
+        status: 'active'
+      })
+      .get()
+      .then(function(res) {
+        var courses = res.data || []
+
+        // 计算总剩余课时
+        var totalRemaining = 0
+        var totalUsed = 0
+        courses.forEach(function(course) {
+          totalRemaining += course.remainingSessions || 0
+          totalUsed += course.usedSessions || 0
+        })
+
+        self.setData({
+          studentCourses: courses,
+          totalRemainingSessions: totalRemaining,
+          totalUsedSessions: totalUsed
+        })
+      })
+      .catch(function(err) {
+        console.error('加载课程信息失败:', err)
+      })
   },
 
   // 加载课程记录
@@ -76,7 +127,7 @@ Page({
 
           // 获取教练信息
           var coachName = '教练'
-          var coachAvatar = '/images/avatar.png'
+          var coachAvatar = ''
 
           return wx.cloud.callFunction({
             name: 'getCoachInfo',

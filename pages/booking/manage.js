@@ -99,7 +99,7 @@ Page({
 
             // 获取学员信息
             var studentName = '学员'
-            var studentAvatar = '/images/avatar.png'
+            var studentAvatar = ''
 
             return wx.cloud.callFunction({
               name: 'getUserInfo',

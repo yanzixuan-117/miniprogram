@@ -1,4 +1,4 @@
-<!-- pages/admin/venue-manage/venue-edit/venue-edit.wxml -->
+<!-- pages/admin/venue-edit.wxml -->
 <view class="container">
   <!-- 页面标题 -->
   <!-- <view class="page-header">

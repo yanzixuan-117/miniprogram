@@ -19,13 +19,19 @@ Page({
     this.setData({ loading: true })
 
     try {
-      // 使用云函数获取教练列表（云函数会处理头像URL）
+      // 清除图片URL缓存，确保强制转换云存储URL
+      util.clearCloudURLCache()
+
+      // 使用云函数获取教练列表
       var res = await wx.cloud.callFunction({
         name: 'getCoaches',
         data: { status: 1 }
       })
 
       var coachList = res.result.success ? (res.result.data || []) : []
+
+      // 批量转换教练头像云存储URL为临时URL
+      coachList = await util.processListCloudURLs(coachList, ['cloudAvatarUrl'], '', true)
 
       this.setData({ coachList: coachList })
     } catch (err) {
@@ -58,40 +64,24 @@ Page({
     }, 1000)
   },
 
-  // 图片加载失败处理 - 尝试重新获取临时URL
+  // 图片加载失败处理 - 备用方案（正常情况下预转换已处理）
   onImageError: function(e) {
     var self = this
     var index = e.currentTarget.dataset.index
     var cloudUrl = e.currentTarget.dataset.cloudurl
 
-    // 如果有云存储URL，尝试重新获取临时URL
-    if (cloudUrl && cloudUrl.startsWith('cloud://')) {
-      wx.cloud.getTempFileURL({
-        fileList: [cloudUrl]
-      }).then(function(res) {
-        if (res.fileList && res.fileList[0] && res.fileList[0].status === 0) {
-          var tempUrl = res.fileList[0].tempFileURL
-          var coachList = self.data.coachList
-          coachList[index].avatarUrl = tempUrl
-          self.setData({ coachList: coachList })
-        } else {
-          // 获取失败，使用默认头像
-          var coachList = self.data.coachList
-          coachList[index].avatarUrl = '/images/avatar.png'
-          self.setData({ coachList: coachList })
-        }
-      }).catch(function(err) {
-        console.error('重新获取临时URL失败:', err)
-        // 失败时使用默认头像
+    // 尝试重新获取临时URL
+    if (cloudUrl) {
+      util.processCloudImageURL(cloudUrl, '', false).then(function(tempUrl) {
         var coachList = self.data.coachList
-        coachList[index].avatarUrl = '/images/avatar.png'
+        coachList[index].cloudAvatarUrl = tempUrl
+        self.setData({ coachList: coachList })
+      }).catch(function() {
+        // 失败则使用默认头像
+        var coachList = self.data.coachList
+        coachList[index].cloudAvatarUrl = ''
         self.setData({ coachList: coachList })
       })
-    } else {
-      // 没有云存储URL，直接使用默认头像
-      var coachList = this.data.coachList
-      coachList[index].avatarUrl = '/images/avatar.png'
-      this.setData({ coachList: coachList })
     }
   }
 })

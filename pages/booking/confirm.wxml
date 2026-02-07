@@ -2,7 +2,7 @@
 <view class="confirm-container">
   <!-- 教练信息卡片 -->
   <view class="coach-info-card" wx:if="{{coachInfo}}">
-    <image class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <image class="coach-avatar" src="{{coachInfo.avatarUrl }}" mode="aspectFill"></image>
     <view class="coach-details">
       <text class="coach-name">{{coachInfo.name || '教练'}}</text>
       <view class="coach-tags" wx:if="{{coachInfo.specialty && coachInfo.specialty.length > 0}}">

@@ -20,11 +20,11 @@ Page({
   // 计算安全的头像URL
   getSafeAvatarUrl: function(url) {
     if (!url || !url.trim()) {
-      return '/images/avatar.png'
+      return ''
     }
-    // 如果是云存储URL，返回默认图片
+    // 如果是云存储URL，返回空字符串
     if (url.indexOf('cloud://') !== -1) {
-      return '/images/avatar.png'
+      return ''
     }
     return url
   },
@@ -142,7 +142,7 @@ Page({
         // 如果云函数返回的仍是 cloud://，则使用默认图片
         coachInfo.avatarUrl = (coachData.avatarUrl && coachData.avatarUrl.indexOf('cloud://') !== 0)
           ? coachData.avatarUrl
-          : '/images/avatar.png'
+          : ''
 
         self.setData({
           coachInfo: coachInfo
@@ -275,7 +275,7 @@ Page({
     self.filterTodaySlots()
   },
 
-  // 检查已被预约的时间段（包括待审核和已确认状态）
+  // 检查已被预约的时间段（包括待审核和已确认状态，以及固定预约）
   checkBookedSlots: function() {
     var self = this
 
@@ -283,43 +283,83 @@ Page({
     var db = wx.cloud.database()
     var _ = db.command
 
-    db.collection('bookings')
-      .where({
-        coachId: self.data.coachId,
-        date: self.data.date,
-        status: _.in(['pending', 'confirmed'])
-      })
-      .get()
-      .then(function(res) {
-        var bookedTimes = (res.data || []).map(function(b) { return b.startTime })
+    // 计算选定日期是星期几
+    var dateObj = new Date(self.data.date)
+    var weekday = dateObj.getDay() // 0-6, 0是周日
 
-        // 更新时间段可用状态：只有在教练设置可用 AND 未被预约时才可用
-        var timeSlots = self.data.timeSlots.map(function(slot) {
-          var isBooked = false
-          for (var i = 0; i < bookedTimes.length; i++) {
-            if (bookedTimes[i] === slot.time) {
-              isBooked = true
-              break
-            }
-          }
-          var newSlot = {}
-          for (var key in slot) {
-            if (slot.hasOwnProperty(key)) {
-              newSlot[key] = slot[key]
-            }
-          }
-          newSlot.available = slot.available && !isBooked  // 保留教练的设置，再检查是否已预约
-          return newSlot
+    // 并发查询：普通预约 + 固定预约
+    Promise.all([
+      // 查询普通预约
+      db.collection('bookings')
+        .where({
+          coachId: self.data.coachId,
+          date: self.data.date,
+          status: _.in(['pending', 'confirmed'])
         })
+        .get(),
 
-        self.setData({ timeSlots: timeSlots })
+      // 查询固定预约
+      db.collection('fixedBookings')
+        .where({
+          coachId: self.data.coachId,
+          weekday: weekday,
+          status: 1
+        })
+        .get()
+    ])
+    .then(function(results) {
+      var bookingRes = results[0]
+      var fixedRes = results[1]
 
-        // 过滤今天的时间段（只能预约当前时间1小时后）
-        self.filterTodaySlots()
+      // 收集已占用的时间段
+      var bookedTimes = (bookingRes.data || []).map(function(b) { return b.startTime })
+
+      // 检查固定预约的有效期并添加已占用时间
+      var targetDate = new Date(self.data.date)
+      var fixedBookedTimes = (fixedRes.data || [])
+        .filter(function(fb) {
+          // 检查有效期
+          if (fb.validUntil) {
+            var validUntil = new Date(fb.validUntil)
+            if (targetDate > validUntil) {
+              return false // 已过期
+            }
+          }
+          return true
+        })
+        .map(function(fb) { return fb.startTime })
+
+      // 合并已占用时间段
+      var allBookedTimes = bookedTimes.concat(fixedBookedTimes)
+
+      // 更新时间段可用状态：只有在教练设置可用 AND 未被预约时才可用
+      var timeSlots = self.data.timeSlots.map(function(slot) {
+        var isBooked = false
+        for (var i = 0; i < allBookedTimes.length; i++) {
+          if (allBookedTimes[i] === slot.time) {
+            isBooked = true
+            break
+          }
+        }
+        var newSlot = {}
+        for (var key in slot) {
+          if (slot.hasOwnProperty(key)) {
+            newSlot[key] = slot[key]
+          }
+        }
+        newSlot.available = slot.available && !isBooked  // 保留教练的设置，再检查是否已预约
+        return newSlot
       })
-      .catch(function(err) {
-        // 忽略错误
-      })
+
+      self.setData({ timeSlots: timeSlots })
+
+      // 过滤今天的时间段（只能预约当前时间1小时后）
+      self.filterTodaySlots()
+    })
+    .catch(function(err) {
+      console.error('检查已预约时间段失败:', err)
+      // 忽略错误，使用原有时间段
+    })
   },
 
   // 过滤今天的时间段（只能预约当前时间1小时后）

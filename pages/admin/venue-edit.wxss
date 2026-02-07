@@ -1,4 +1,4 @@
-/* pages/admin/venue-manage/venue-edit/venue-edit.wxss */
+/* pages/admin/venue-edit.wxss */
 
 .container {
   min-height: 100vh;

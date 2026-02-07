@@ -1,0 +1,116 @@
+<!--pages/booking/select-booking.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">预约课程</text>
+    <text class="subtitle">请选择预约信息</text>
+  </view>
+
+  <!-- 选择球馆 -->
+  <view class="section">
+    <view class="section-label">选择球馆</view>
+    <picker class="picker" mode="selector" range="{{venueList}}" range-key="name" value="{{venueIndex}}" bindchange="onVenueChange">
+      <view class="picker-display">
+        <text class="picker-text">{{displayVenue}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 选择教练 -->
+  <view class="section">
+    <view class="section-label">选择教练</view>
+    <picker class="picker" mode="selector" range="{{coachList}}" range-key="name" value="{{coachIndex}}" bindchange="onCoachChange">
+      <view class="picker-display">
+        <text class="picker-text">{{displayCoach}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 选择日期（日历格式） -->
+  <view class="section calendar-section">
+    <view class="section-label">选择日期（{{currentMonth}}）</view>
+
+    <!-- 星期标题 -->
+    <view class="calendar-weekdays">
+      <view class="weekday-item" wx:for="{{['日', '一', '二', '三', '四', '五', '六']}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <!-- 日期网格 -->
+    <scroll-view class="calendar-scroll" scroll-y>
+      <view class="calendar-days">
+        <view
+          class="day-item {{date === item.date ? 'selected' : ''}} {{item.isToday ? 'today' : ''}} {{item.isEmpty ? 'empty' : ''}}"
+          wx:for="{{calendarDays}}"
+          wx:key="date"
+          bindtap="onDateSelect"
+          data-date="{{item.date}}"
+        >
+          <block wx:if="{{!item.isEmpty}}">
+            <text class="day-date">{{item.day}}</text>
+          </block>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 选择时间 -->
+  <view class="section time-section">
+    <view class="section-label">选择时间</view>
+
+    <view wx:if="{{loadingSlots}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:elif="{{timeSlots.length === 0}}" class="empty">
+      <text class="empty-text">{{date ? '暂无可选时间' : '请先选择日期'}}</text>
+    </view>
+
+    <view wx:else class="time-slots">
+      <view
+        class="time-slot {{timeIndex === index ? 'selected' : ''}} {{!item.available ? 'disabled' : ''}}"
+        wx:for="{{timeSlots}}"
+        wx:key="time"
+        bindtap="onTimeChange"
+        data-index="{{index}}"
+      >
+        <text class="slot-time">{{item.time}}</text>
+        <text class="slot-end-time">{{item.endTime}}</text>
+        <text class="slot-status" wx:if="{{!item.available}}">已占用</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已选信息汇总 -->
+  <view class="summary" wx:if="{{displayVenue || displayCoach || displayDate || displayTime}}">
+    <view class="summary-title">已选信息</view>
+    <view class="summary-item" wx:if="{{displayVenue}}">
+      <text class="summary-label">球馆：</text>
+      <text class="summary-value">{{displayVenue}}</text>
+    </view>
+    <view class="summary-item" wx:if="{{displayCoach}}">
+      <text class="summary-label">教练：</text>
+      <text class="summary-value">{{displayCoach}}</text>
+    </view>
+    <view class="summary-item" wx:if="{{displayDate}}">
+      <text class="summary-label">日期：</text>
+      <text class="summary-value">{{displayDate}}</text>
+    </view>
+    <view class="summary-item" wx:if="{{displayTime}}">
+      <text class="summary-label">时间：</text>
+      <text class="summary-value">{{displayTime}}</text>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button
+      class="submit-btn"
+      bindtap="submitBooking"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+    >
+      {{submitting ? '提交中...' : '提交预约'}}
+    </button>
+  </view>
+</view>

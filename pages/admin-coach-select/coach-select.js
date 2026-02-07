@@ -17,16 +17,31 @@ Page({
   // 检查管理员权限
   checkAdminPermission() {
     const app = getApp()
-    if (!app.isAdmin()) {
+
+    // 重新从 storage 加载用户信息以确保数据最新
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      app.globalData.userInfo = userInfo
+      app.globalData.userRole = userInfo.role
+      app.globalData.displayRole = userInfo.currentRole || userInfo.role
+      app.globalData.hasLogin = true
+    }
+
+    // 管理员权限检查应该基于实际角色，而不是显示角色
+    const actualRole = app.globalData.userRole
+
+    if (actualRole !== 'admin') {
       wx.showModal({
         title: '权限提示',
-        content: '此功能仅限管理员访问',
+        content: '此功能仅限管理员访问\n当前角色：' + (actualRole || '未登录'),
         showCancel: false,
         success: () => {
           wx.navigateBack()
         }
       })
+      return false
     }
+    return true
   },
 
   // 加载用户列表
@@ -48,6 +63,24 @@ Page({
         if (this.data.roleFilter !== 'all') {
           userList = userList.filter(user => user.role === this.data.roleFilter)
         }
+
+        // 关键词搜索筛选
+        if (this.data.keyword && this.data.keyword.trim()) {
+          const keyword = this.data.keyword.trim().toLowerCase()
+          userList = userList.filter(user => {
+            const nickname = (user.nickname || '').toLowerCase()
+            return nickname.includes(keyword)
+          })
+        }
+
+        // 格式化注册时间
+        userList = userList.map(user => ({
+          ...user,
+          createTimeText: user.createTime ? util.formatDateCN(new Date(user.createTime)) : ''
+        }))
+
+        // 批量转换用户头像云存储URL为临时URL
+        userList = await util.processListCloudURLs(userList, ['cloudAvatarUrl', 'avatarUrl'], '', true)
 
         this.setData({
           userList: userList
@@ -82,8 +115,9 @@ Page({
 
   // 角色筛选
   onRoleFilterChange(e) {
+    const roleMap = ['all', 'student', 'coach']
     this.setData({
-      roleFilter: e.detail.value
+      roleFilter: roleMap[e.detail.value]
     })
     this.loadUserList()
   },

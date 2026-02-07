@@ -31,16 +31,32 @@ Page({
   // 计算安全的头像URL
   getSafeAvatarUrl: function(url) {
     if (!url || !url.trim()) {
-      return '/images/avatar.png'
+      return ''
     }
-    // 如果是云存储URL，返回默认图片
+    // 如果是云存储URL，返回空字符串
     if (url.indexOf('cloud://') !== -1) {
-      return '/images/avatar.png'
+      return ''
     }
     return url
   },
 
   onLoad: function(options) {
+    var app = getApp()
+    var userInfo = app.globalData.userInfo
+
+    // 检查用户角色，游客不能预约
+    if (!userInfo || userInfo.role === 'guest') {
+      wx.showModal({
+        title: '提示',
+        content: '您当前是游客身份，无法预约课程。请联系管理员添加为学员。',
+        showCancel: false,
+        success: function() {
+          wx.navigateBack()
+        }
+      })
+      return
+    }
+
     var coachId = options.coachId
 
     if (coachId) {
@@ -102,7 +118,7 @@ Page({
         // 如果云函数返回的仍是 cloud://，则使用默认图片
         coachInfo.avatarUrl = (coachData.avatarUrl && coachData.avatarUrl.indexOf('cloud://') !== 0)
           ? coachData.avatarUrl
-          : '/images/avatar.png'
+          : ''
 
         self.setData({ coachInfo: coachInfo })
       } else {

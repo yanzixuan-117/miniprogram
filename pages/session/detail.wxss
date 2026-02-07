@@ -342,7 +342,7 @@
 .action-btn {
   flex: 1;
   height: 88rpx;
-  line-height: 88rpx;
+  line-height: 58rpx;
   border-radius: 44rpx;
   font-size: 28rpx;
   border: none;
@@ -357,4 +357,20 @@
   background: #fff;
   color: #ff4d4f;
   border: 2rpx solid #ff4d4f;
+}
+
+.action-btn.confirm {
+  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+  color: #fff;
+}
+
+.action-btn.reject {
+  background: #fff;
+  color: #ff4d4f;
+  border: 2rpx solid #ff4d4f;
+}
+
+.action-btn.complete {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  color: #fff;
 }

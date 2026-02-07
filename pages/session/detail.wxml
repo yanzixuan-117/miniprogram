@@ -50,11 +50,29 @@
         <text class="title-text">教练信息</text>
       </view>
       <view class="coach-detail">
-        <image class="coach-avatar" src="{{session.coachAvatar || '/images/avatar.png'}}" mode="aspectFill"></image>
+        <image class="coach-avatar" src="{{session.coachAvatar }}" mode="aspectFill"></image>
         <view class="coach-info">
           <text class="coach-name">{{session.coachName}}</text>
           <view class="coach-tags" wx:if="{{session.coachSpecialty && session.coachSpecialty.length > 0}}">
             <text class="tag" wx:for="{{session.coachSpecialty}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 学员信息卡片（教练端显示） -->
+    <view class="info-card" wx:if="{{userRole === 'coach' || userRole === 'admin'}}">
+      <view class="card-title">
+        <text class="title-icon">👤</text>
+        <text class="title-text">学员信息</text>
+      </view>
+      <view class="coach-detail">
+        <image class="coach-avatar" src="{{session.studentAvatar }}" mode="aspectFill"></image>
+        <view class="coach-info">
+          <text class="coach-name">{{session.studentName}}</text>
+          <!-- 上课人列表 -->
+          <view class="coach-tags" wx:if="{{session.students && session.students.length > 0}}">
+            <text class="tag" wx:for="{{session.students}}" wx:key="*this">+{{item.name}}</text>
           </view>
         </view>
       </view>
@@ -115,15 +133,21 @@
   </view>
 
   <!-- 操作按钮区域 -->
-  <view class="action-section" wx:if="{{!loading && session}}">
-    <!-- 待审核状态：取消按钮 -->
-    <view class="actions" wx:if="{{session.status === 'pending'}}">
+  <view class="action-section" wx:if="{{!loading && session && isOwner}}">
+    <!-- 学员视角：待审核/已确认状态显示取消按钮 -->
+    <view class="actions" wx:if="{{userRole === 'student' && (session.status === 'pending' || session.status === 'confirmed')}}">
       <button class="action-btn cancel" catchtap="cancelSession">取消预约</button>
     </view>
 
-    <!-- 已确认状态：取消按钮 -->
-    <view class="actions" wx:if="{{session.status === 'confirmed'}}">
-      <button class="action-btn cancel" catchtap="cancelSession">取消预约</button>
+    <!-- 教练视角：待审核状态显示同意/拒绝按钮 -->
+    <view class="actions" wx:if="{{(userRole === 'coach' || userRole === 'admin') && session.status === 'pending'}}">
+      <button class="action-btn reject" catchtap="rejectBooking">拒绝预约</button>
+      <button class="action-btn confirm" catchtap="confirmBooking">同意预约</button>
+    </view>
+
+    <!-- 教练视角：已确认状态显示完成按钮 -->
+    <view class="actions" wx:if="{{(userRole === 'coach' || userRole === 'admin') && session.status === 'confirmed'}}">
+      <button class="action-btn complete" catchtap="completeBooking">完成课程</button>
     </view>
   </view>
 

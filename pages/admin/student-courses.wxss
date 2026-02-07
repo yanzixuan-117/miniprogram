@@ -1,0 +1,260 @@
+/* pages/admin/student-courses/student-courses.wxss */
+.courses-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8f9ff 0%, #f6f6f6 100%);
+  padding-bottom: 32rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 48rpx 32rpx;
+  color: #fff;
+}
+
+.student-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+}
+
+.course-count {
+  display: block;
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+/* 添加课程区域 */
+.add-course-section {
+  padding: 24rpx 32rpx;
+}
+
+.add-course-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
+  border: none;
+}
+
+.add-course-btn::after {
+  border: none;
+}
+
+.add-course-btn .btn-icon {
+  font-size: 40rpx;
+  margin-right: 8rpx;
+  line-height: 1;
+}
+
+.add-course-btn .btn-text {
+  line-height: 1;
+}
+
+/* 课程列表 */
+.course-list {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.course-item {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.08);
+}
+
+.course-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.course-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.course-status {
+  font-size: 24rpx;
+  font-weight: 600;
+  padding: 8rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.course-status.status-active {
+  background: linear-gradient(135deg, rgba(76, 217, 100, 0.15) 0%, rgba(76, 217, 100, 0.1) 100%);
+  color: #4cd964;
+}
+
+.course-status.status-expired {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%);
+  color: #ff9800;
+}
+
+.course-status.status-completed {
+  background: linear-gradient(135deg, rgba(153, 153, 153, 0.15) 0%, rgba(153, 153, 153, 0.1) 100%);
+  color: #999;
+}
+
+.course-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  border-radius: 16rpx;
+}
+
+.info-row {
+  flex: 1;
+  min-width: 140rpx;
+}
+
+.info-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.info-value {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.info-value.highlight {
+  color: #667eea;
+  font-size: 32rpx;
+}
+
+.course-progress {
+  margin-bottom: 24rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background: #e8ebff;
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8rpx;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.course-coach {
+  margin-bottom: 16rpx;
+  padding: 20rpx;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 12rpx;
+}
+
+.coach-label {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.coach-name {
+  font-size: 26rpx;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.course-notes {
+  margin-bottom: 24rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.notes-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 8rpx;
+}
+
+.notes-text {
+  font-size: 26rpx;
+  color: #2c3e50;
+}
+
+.course-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  padding: 0;
+  font-size: 28rpx;
+  border-radius: 16rpx;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.1) 0%, rgba(255, 59, 48, 0.05) 100%);
+  color: #ff3b30;
+  border: 2rpx solid rgba(255, 59, 48, 0.2);
+}
+
+.delete-btn:active {
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.15) 0%, rgba(255, 59, 48, 0.1) 100%);
+}
+
+/* 加载和空状态 */
+.loading-container,
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 48rpx;
+}
+
+.loading-text,
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 24rpx;
+  font-weight: 500;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.6;
+}

@@ -1,0 +1,85 @@
+<!--pages/fixed-booking/edit.wxml-->
+<view class="container">
+  <view class="form-section">
+    <view class="section-title">{{isEdit ? '编辑' : '添加'}}固定预约</view>
+
+    <!-- 选择星期 -->
+    <view class="form-item">
+      <text class="label">选择星期</text>
+      <picker class="picker" mode="selector" range="{{weekdayOptions}}" range-key="label" value="{{form.weekday}}" bindchange="onWeekdayChange">
+        <view class="picker-display">
+          <text class="picker-text">{{displayWeekday}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 选择开始时间 -->
+    <view class="form-item">
+      <text class="label">开始时间</text>
+      <picker class="picker" mode="time" value="{{form.startTime}}" start="06:00" end="22:00" bindchange="onStartTimeChange">
+        <view class="picker-display">
+          <text class="picker-text">{{form.startTime || '请选择'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 选择结束时间 -->
+    <view class="form-item">
+      <text class="label">结束时间</text>
+      <picker class="picker" mode="time" value="{{form.endTime}}" start="06:00" end="22:00" bindchange="onEndTimeChange">
+        <view class="picker-display">
+          <text class="picker-text">{{form.endTime || '请选择'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 选择教练 -->
+    <view class="form-item">
+      <text class="label">选择教练</text>
+      <picker class="picker" range="{{coachList}}" range-key="name" value="{{form.coachIndex}}" bindchange="onCoachChange">
+        <view class="picker-display">
+          <text class="picker-text">{{displayCoach}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 选择球馆 -->
+    <view class="form-item">
+      <text class="label">选择球馆</text>
+      <picker class="picker" range="{{venueList}}" range-key="name" value="{{form.venueIndex}}" bindchange="onVenueChange">
+        <view class="picker-display">
+          <text class="picker-text">{{displayVenue}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 有效期（可选） -->
+    <view class="form-item">
+      <text class="label">有效期至（可选）</text>
+      <picker class="picker" mode="date" value="{{form.validUntil}}" end="2026-12-31" bindchange="onDateChange">
+        <view class="picker-display">
+          <text class="picker-text">{{form.validUntil || '永久有效'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="tips">
+      <text class="tips-title">💡 温馨提示</text>
+      <text class="tips-text">• 系统将根据您设置的时间自动创建预约</text>
+      <text class="tips-text">• 建议提前1-2天设置，确保预约成功</text>
+      <text class="tips-text">• 可随时暂停或修改固定预约</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="button-group">
+    <button class="btn-cancel" bindtap="goBack">取消</button>
+    <button class="btn-primary" bindtap="save" loading="{{saving}}">{{isEdit ? '保存' : '添加'}}</button>
+  </view>
+</view>

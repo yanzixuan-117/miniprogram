@@ -1,0 +1,84 @@
+<!--pages/admin/student-courses/student-courses.wxml-->
+<view class="courses-container">
+  <view class="header">
+    <text class="student-name">{{studentName}}</text>
+    <text class="course-count">共{{courseList.length}}个课程</text>
+  </view>
+
+  <!-- 添加课程按钮 -->
+  <view class="add-course-section">
+    <button class="add-course-btn" bindtap="addCourse">
+      <text class="btn-icon">+</text>
+      <text class="btn-text">添加课程</text>
+    </button>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="course-list" wx:if="{{!loading && courseList.length > 0}}">
+    <view class="course-item" wx:for="{{courseList}}" wx:key="_id">
+      <view class="course-header">
+        <text class="course-name">{{item.courseName}}</text>
+        <view class="course-status status-{{item.status}}">
+          {{item.status === 'active' ? '有效' : (item.status === 'expired' ? '已过期' : '已完成')}}
+        </view>
+      </view>
+
+      <view class="course-info">
+        <view class="info-row">
+          <text class="info-label">总课次</text>
+          <text class="info-value">{{item.totalSessions}}次</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">已使用</text>
+          <text class="info-value">{{item.usedSessions}}次</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">剩余</text>
+          <text class="info-value highlight">{{item.remainingSessions}}次</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">结束日期</text>
+          <text class="info-value">{{item.endDate}}</text>
+        </view>
+      </view>
+
+      <view class="course-progress" wx:if="{{item.status === 'active'}}">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{item.remainingPercent}}%"></view>
+        </view>
+        <text class="progress-text">剩余 {{item.remainingSessions}}/{{item.totalSessions}} 课时</text>
+      </view>
+
+      <view class="course-coach" wx:if="{{item.coachName}}">
+        <text class="coach-label">指定教练：</text>
+        <text class="coach-name">{{item.coachName}}</text>
+      </view>
+
+      <view class="course-notes" wx:if="{{item.notes}}">
+        <text class="notes-label">备注：</text>
+        <text class="notes-text">{{item.notes}}</text>
+      </view>
+
+      <view class="course-actions">
+        <button
+          class="action-btn delete-btn"
+          bindtap="deleteCourse"
+          data-course-id="{{item._id}}"
+          data-course-name="{{item.courseName}}">
+          删除课程
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{!loading && courseList.length === 0}}">
+    <text class="empty-icon">📚</text>
+    <text class="empty-text">暂无课程</text>
+  </view>
+</view>

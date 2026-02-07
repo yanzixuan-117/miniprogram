@@ -32,25 +32,30 @@ Page({
   },
 
   // 加载教练列表
-  loadCoachList: function() {
+  loadCoachList: async function() {
     var self = this
     self.setData({ loading: true })
 
-    wx.cloud.callFunction({
-      name: 'getCoaches',
-      data: { status: 1 }
-    }).then(function(res) {
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'getCoaches',
+        data: { status: 1 }
+      })
+
       var coachList = res.result.success ? (res.result.data || []) : []
+
+      // 批量转换教练头像云存储URL为临时URL
+      coachList = await util.processListCloudURLs(coachList, ['cloudAvatarUrl'], '', true)
 
       self.setData({
         coachList: coachList,
         filteredList: coachList
       })
-    }).catch(function(err) {
+    } catch (err) {
       util.showError('加载失败')
-    }).then(function() {
+    } finally {
       self.setData({ loading: false })
-    })
+    }
   },
 
   // 显示筛选弹窗
@@ -132,6 +137,19 @@ Page({
 
   // 立即预约
   bookNow: function(e) {
+    var app = getApp()
+    var userInfo = app.globalData.userInfo
+
+    // 检查用户角色，游客不能预约
+    if (!userInfo || userInfo.role === 'guest') {
+      wx.showModal({
+        title: '提示',
+        content: '您当前是游客身份，无法预约课程。请联系管理员添加为学员。',
+        showCancel: false
+      })
+      return
+    }
+
     var id = e.currentTarget.dataset.id
     wx.navigateTo({
       url: '/pages/booking/select-date?coachId=' + id
@@ -145,40 +163,24 @@ Page({
     }, 1000)
   },
 
-  // 图片加载失败处理 - 尝试重新获取临时URL
+  // 图片加载失败处理 - 备用方案（正常情况下预转换已处理）
   onImageError: function(e) {
     var self = this
     var index = e.currentTarget.dataset.index
     var cloudUrl = e.currentTarget.dataset.cloudurl
 
-    // 如果有云存储URL，尝试重新获取临时URL
-    if (cloudUrl && cloudUrl.startsWith('cloud://')) {
-      wx.cloud.getTempFileURL({
-        fileList: [cloudUrl]
-      }).then(function(res) {
-        if (res.fileList && res.fileList[0] && res.fileList[0].status === 0) {
-          var tempUrl = res.fileList[0].tempFileURL
-          var filteredList = self.data.filteredList
-          filteredList[index].avatarUrl = tempUrl
-          self.setData({ filteredList: filteredList })
-        } else {
-          // 获取失败，使用默认头像
-          var filteredList = self.data.filteredList
-          filteredList[index].avatarUrl = '/images/avatar.png'
-          self.setData({ filteredList: filteredList })
-        }
-      }).catch(function(err) {
-        console.error('重新获取临时URL失败:', err)
-        // 失败时使用默认头像
+    // 尝试重新获取临时URL
+    if (cloudUrl) {
+      util.processCloudImageURL(cloudUrl, '', false).then(function(tempUrl) {
         var filteredList = self.data.filteredList
-        filteredList[index].avatarUrl = '/images/avatar.png'
+        filteredList[index].cloudAvatarUrl = tempUrl
+        self.setData({ filteredList: filteredList })
+      }).catch(function() {
+        // 失败则使用默认头像
+        var filteredList = self.data.filteredList
+        filteredList[index].cloudAvatarUrl = ''
         self.setData({ filteredList: filteredList })
       })
-    } else {
-      // 没有云存储URL，直接使用默认头像
-      var filteredList = this.data.filteredList
-      filteredList[index].avatarUrl = '/images/avatar.png'
-      this.setData({ filteredList: filteredList })
     }
   }
 })

@@ -1,0 +1,72 @@
+<!--pages/fixed-booking/list.wxml-->
+<view class="container">
+  <!-- 顶部操作栏 -->
+  <view class="header">
+    <text class="title">我的固定预约</text>
+    <button class="add-btn" bindtap="goToAdd">
+      <text class="add-icon">+</text>
+      <text>添加</text>
+    </button>
+  </view>
+
+  <!-- 固定预约列表 -->
+  <view class="booking-list" wx:if="{{!loading && fixedBookings.length > 0}}">
+    <view class="booking-item" wx:for="{{fixedBookings}}" wx:key="_id">
+      <view class="booking-info" bindtap="goToEdit" data-id="{{item._id}}">
+        <view class="time-badge">
+          <text class="weekday">{{weekdayText[item.weekday]}}</text>
+          <text class="time">{{item.startTime}}-{{item.endTime}}</text>
+        </view>
+
+        <view class="details">
+          <view class="detail-row">
+            <text class="label">教练：</text>
+            <text class="value">{{item.coachName || '加载中...'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="label">球馆：</text>
+            <text class="value">{{item.venueName || '未指定'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="label">状态：</text>
+            <text class="status status-{{item.status}}">{{item.status === 1 ? '启用中' : '已暂停'}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.validUntil}}">
+            <text class="label">有效期至：</text>
+            <text class="value">{{item.validUntilText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="actions" catchtap="">
+        <button class="action-btn" catchtap="toggleStatus" data-id="{{item._id}}" data-status="{{item.status}}">
+          {{item.status === 1 ? '暂停' : '启用'}}
+        </button>
+        <button class="action-btn primary" catchtap="goToEdit" data-id="{{item._id}}">编辑</button>
+        <button class="action-btn danger" catchtap="deleteBooking" data-id="{{item._id}}" data-weekday="{{item.weekday}}" data-time="{{item.startTime}}">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{!loading && fixedBookings.length === 0}}">
+    <text class="empty-icon">📅</text>
+    <text class="empty-text">暂无固定预约</text>
+    <text class="empty-hint">点击上方"添加"按钮设置固定上课时间</text>
+    <view class="empty-desc">
+      <text class="desc-text">• 设置后每周自动为您预约课程</text>
+      <text class="desc-text">• 无需每天手动预约</text>
+      <text class="desc-text">• 可随时暂停或修改</text>
+    </view>
+  </view>
+
+  <!-- 测试按钮（开发时显示） -->
+  <view class="test-section" wx:if="{{fixedBookings.length > 0}}">
+    <button class="test-btn" bindtap="triggerBookings">手动触发预约（测试）</button>
+  </view>
+</view>

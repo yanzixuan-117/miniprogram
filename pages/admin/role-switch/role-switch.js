@@ -34,10 +34,24 @@ Page({
   // 检查管理员权限
   checkAdminPermission() {
     const app = getApp()
+
+    // 重新从 storage 加载用户信息以确保数据最新
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      app.globalData.userInfo = userInfo
+      app.globalData.userRole = userInfo.role
+      app.globalData.hasLogin = true
+    }
+
+    // 调试：打印用户角色信息
+    console.log('=== 角色切换权限检查 ===')
+    console.log('userRole:', app.globalData.userRole)
+    console.log('userInfo.role:', userInfo ? userInfo.role : 'null')
+
     if (!app.isAdmin()) {
       wx.showModal({
         title: '权限提示',
-        content: '此功能仅限管理员访问',
+        content: '此功能仅限管理员访问\n当前角色：' + (app.globalData.userRole || '未登录'),
         showCancel: false,
         success: () => {
           wx.navigateBack()

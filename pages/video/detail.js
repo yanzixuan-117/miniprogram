@@ -45,6 +45,11 @@ Page({
       if (res.result.success) {
         var video = res.result.data
 
+        // 预转换视频封面云存储URL为临时URL
+        if (video.thumbnail) {
+          video.thumbnail = await util.processCloudImageURL(video.thumbnail, '/images/default-video.png', true)
+        }
+
         // 格式化数据 - 手动复制对象
         var formattedVideo = {}
         for (var key in video) {

@@ -8,7 +8,7 @@
       <view class="avatar-section">
         <image
           class="avatar-preview"
-          src="{{formData.avatarUrl || '/images/avatar.png'}}"
+          src="{{formData.avatarUrl }}"
           mode="aspectFill">
         </image>
         <button class="upload-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">

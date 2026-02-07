@@ -1,4 +1,4 @@
-<!--pages/admin/coach-manage/coach-manage.wxml-->
+<!--pages/admin/coach-manage.wxml-->
 <view class="coach-manage-container">
   <!-- 顶部操作栏 -->
   <view class="header-bar">
@@ -26,17 +26,7 @@
         <view wx:else class="coach-avatar default-avatar">👨‍🏫</view>
         <view class="coach-detail">
           <view class="coach-name-row">
-            <!-- 显示状态 -->
-            <block wx:if="{{editingCoachId !== item._id}}">
-              <text class="coach-name">{{item.name || item.nickname || '未设置姓名'}}</text>
-              <text class="edit-name-btn" catchtap="startEditName" data-id="{{item._id}}" data-name="{{item.name || item.nickname}}">✏️</text>
-            </block>
-            <!-- 编辑状态 -->
-            <block wx:else>
-              <input class="name-input" value="{{editingName}}" bindinput="onNameInput" catchtap="" placeholder="输入昵称" />
-              <text class="save-name-btn" catchtap="saveName" data-id="{{item._id}}">✓</text>
-              <text class="cancel-name-btn" catchtap="cancelEdit">✗</text>
-            </block>
+            <text class="coach-name">{{item.name || item.nickname || '未设置姓名'}}</text>
             <view class="status-badge status-{{item.status}}">
               <text>{{item.status === 1 ? '启用' : '禁用'}}</text>
             </view>

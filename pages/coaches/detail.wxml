@@ -2,7 +2,7 @@
 <view class="detail-container" wx:if="{{coachInfo}}">
   <!-- 教练信息卡片 -->
   <view class="coach-card">
-    <image lazy-load class="coach-avatar" src="{{coachInfo.avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+    <image lazy-load class="coach-avatar" src="{{coachInfo.avatarUrl }}" mode="aspectFill"></image>
     <view class="coach-info">
       <text class="coach-name">{{coachInfo.name || '教练'}}</text>
       <view class="coach-rating">

@@ -23,9 +23,12 @@
 .login-icon {
   width: 160rpx;
   height: 160rpx;
+  line-height: 160rpx;
+  text-align: center;
   border-radius: 32rpx;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   margin-bottom: 32rpx;
+  font-size: 50px;
 }
 
 .login-title {

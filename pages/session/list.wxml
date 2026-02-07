@@ -24,6 +24,25 @@
     </view>
   </view>
 
+  <!-- 学员课时统计 -->
+  <view class="course-stats-card" wx:if="{{userRole === 'student' && (totalRemainingSessions !== undefined || totalUsedSessions !== undefined)}}">
+    <view class="stats-header">
+      <text class="stats-title">我的课时</text>
+      <text class="stats-badge">{{studentCourses.length}}个课程</text>
+    </view>
+    <view class="stats-content">
+      <view class="stat-item">
+        <text class="stat-value">{{totalRemainingSessions || 0}}</text>
+        <text class="stat-label">剩余课时</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{totalUsedSessions || 0}}</text>
+        <text class="stat-label">已使用</text>
+      </view>
+    </view>
+  </view>
+
   <!-- 加载状态 -->
   <view class="loading" wx:if="{{loading}}">
     <text class="loading-text">加载中...</text>

@@ -79,7 +79,7 @@
   <!-- 作者信息 -->
   <view class="author-section">
     <view class="author-info">
-      <image lazy-load class="author-avatar" src="{{video.authorAvatar || '/images/avatar.png'}}" mode="aspectFill"></image>
+      <image lazy-load class="author-avatar" src="{{video.authorAvatar }}" mode="aspectFill"></image>
       <view class="author-detail">
         <text class="author-name">{{video.authorName}}</text>
         <text class="author-role">教练</text>

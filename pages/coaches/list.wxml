@@ -10,7 +10,7 @@
     <view class="coach-card" wx:for="{{coachList}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
       <!-- 教练头像 -->
       <image lazy-load class="coach-avatar"
-             src="{{item.cloudAvatarUrl || item.avatarUrl || '/images/avatar.png'}}"
+             src="{{item.cloudAvatarUrl || item.avatarUrl }}"
              mode="aspectFill"
              binderror="onImageError"
              data-index="{{index}}"

@@ -1,0 +1,74 @@
+<!--pages/admin/student-manage/student-manage.wxml-->
+<view class="manage-container">
+  <!-- 顶部筛选栏 -->
+  <view class="filter-bar">
+    <picker class="role-picker" mode="selector" range="{{['全部', '游客', '学员']}}" range-key="" value="{{roleFilter === 'all' ? 0 : (roleFilter === 'guest' ? 1 : 2)}}" bindchange="onRoleFilterChange">
+      <view class="picker-display">
+        <text class="picker-text">{{roleFilter === 'all' ? '全部用户' : (roleFilter === 'guest' ? '仅显示游客' : '仅显示学员')}}</text>
+        <text class="picker-arrow">▼</text>
+      </view>
+    </picker>
+
+    <input class="search-input" placeholder="搜索用户昵称" value="{{keyword}}" bindinput="onSearchInput" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 用户列表 -->
+  <view class="user-list" wx:if="{{!loading && userList.length > 0}}">
+    <view class="user-item" wx:for="{{userList}}" wx:key="_openid">
+      <image
+        wx:if="{{item.avatarUrl && item.avatarUrl.indexOf('cloud://') !== 0}}"
+        class="user-avatar"
+        src="{{item.avatarUrl }}"
+        mode="aspectFill">
+      </image>
+      <view class="user-info">
+        <text class="user-name">{{item.nickname || '未设置昵称'}}</text>
+        <view class="user-meta">
+          <view class="meta-item role-{{item.role}}">
+            {{item.role === 'guest' ? '游客' : (item.role === 'student' ? '学员' : (item.role === 'coach' ? '教练' : '管理员'))}}
+          </view>
+          <text class="meta-item" wx:if="{{item.createTimeText}}">{{item.createTimeText}}</text>
+        </view>
+      </view>
+      <view class="user-actions">
+        <button
+          class="action-btn add-btn"
+          wx:if="{{item.role === 'guest'}}"
+          bindtap="addAsStudent"
+          data-openid="{{item._openid}}"
+          data-name="{{item.nickname}}"
+          data-role="{{item.role}}">
+          添加为学员
+        </button>
+        <button
+          class="action-btn course-btn"
+          wx:if="{{item.role === 'student'}}"
+          bindtap="viewStudentCourses"
+          data-openid="{{item._openid}}"
+          data-name="{{item.nickname}}">
+          查看课程
+        </button>
+        <button
+          class="action-btn add-course-btn"
+          wx:if="{{item.role === 'student'}}"
+          bindtap="addCourse"
+          data-openid="{{item._openid}}"
+          data-name="{{item.nickname}}">
+          添加课程
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{!loading && userList.length === 0}}">
+    <text class="empty-icon">👥</text>
+    <text class="empty-text">暂无用户</text>
+  </view>
+</view>

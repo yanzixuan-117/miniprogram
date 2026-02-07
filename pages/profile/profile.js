@@ -255,32 +255,32 @@ Page({
   },
 
   // 时间设置
-  goToSchedule: function() {
-    wx.navigateTo({
-      url: '/pages/coaches/schedule'
-    })
-  },
+//   goToSchedule: function() {
+//     wx.navigateTo({
+//       url: '/pages/coaches/schedule'
+//     })
+//   },
 
   // 教练资料
-  goToCoachProfile: function() {
-    wx.navigateTo({
-      url: '/pages/coaches/profile/profile'
-    })
-  },
+//   goToCoachProfile: function() {
+//     wx.navigateTo({
+//       url: '/pages/coaches/profile/profile'
+//     })
+//   },
 
   // 视频管理
-  goToVideoManage: function() {
-    wx.navigateTo({
-      url: '/pages/video/manage'
-    })
-  },
+//   goToVideoManage: function() {
+//     wx.navigateTo({
+//       url: '/pages/video/manage'
+//     })
+//   },
 
-  // 管理员功能
-  goToAdminManage: function() {
-    wx.navigateTo({
-      url: '/pages/admin/manage'
-    })
-  },
+  // 管理员功能 - 跳转到角色切换页面
+//   goToAdminManage: function() {
+//     wx.navigateTo({
+//       url: '/pages/admin/role-switch/role-switch'
+//     })
+//   },
 
   // 切换角色
   switchRole: function(e) {
@@ -320,7 +320,14 @@ Page({
   // 我的预约
   goToMyBookings: function() {
     wx.switchTab({
-      url: '/pages/booking/my-bookings'
+      url: '/pages/booking/booking-hub'
+    })
+  },
+
+  // 固定预约
+  goToFixedBookings: function() {
+    wx.navigateTo({
+      url: '/pages/fixed-booking/list'
     })
   },
 
@@ -328,13 +335,6 @@ Page({
   goToMyRecords: function() {
     wx.navigateTo({
       url: '/pages/session/list'
-    })
-  },
-
-  // 我的收藏
-  goToFavorites: function() {
-    wx.navigateTo({
-      url: '/pages/video/favorites'
     })
   },
 

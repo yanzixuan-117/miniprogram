@@ -4,45 +4,64 @@ const util = require('../../utils/util.js')
 Page({
   data: {
     coachId: '',
-    formData: {
+    coachInfo: null,
+    loading: false,
+    saving: false,
+    form: {
       name: '',
-      avatarUrl: '',
+      nickname: '',
       phone: '',
       specialty: [],
       introduction: '',
       experience: '',
       status: 1
     },
-    tagInput: '',
-    suggestions: ['网球基础', '发球技术', '接发球', '底线技术', '网前技术', '战术指导', '体能训练', '心理辅导'],
-    saving: false,
-    loading: false
+    specialtyOptions: ['青少年培训', '成人训练', '竞技提升', '入门基础', '战术指导', '体能训练']
   },
 
   onLoad(options) {
-    this.checkAdminPermission()
-
-    if (options.id) {
-      this.setData({
-        coachId: options.id
-      })
-      this.loadCoachInfo()
+    const { id } = options
+    if (!id) {
+      util.showError('教练ID不存在')
+      setTimeout(() => {
+        wx.navigateBack()
+      }, 1500)
+      return
     }
+
+    this.setData({ coachId: id })
+    this.checkAdminPermission()
+    this.loadCoachInfo()
   },
 
   // 检查管理员权限
   checkAdminPermission() {
     const app = getApp()
-    if (!app.isAdmin()) {
+
+    // 重新从 storage 加载用户信息以确保数据最新
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      app.globalData.userInfo = userInfo
+      app.globalData.userRole = userInfo.role
+      app.globalData.displayRole = userInfo.currentRole || userInfo.role
+      app.globalData.hasLogin = true
+    }
+
+    // 管理员权限检查应该基于实际角色，而不是显示角色
+    const actualRole = app.globalData.userRole
+
+    if (actualRole !== 'admin') {
       wx.showModal({
         title: '权限提示',
-        content: '此功能仅限管理员访问',
+        content: '此功能仅限管理员访问\n当前角色：' + (actualRole || '未登录'),
         showCancel: false,
         success: () => {
           wx.navigateBack()
         }
       })
+      return false
     }
+    return true
   },
 
   // 加载教练信息
@@ -51,19 +70,17 @@ Page({
 
     try {
       const res = await wx.cloud.callFunction({
-        name: 'manageCoach',
-        data: {
-          action: 'get',
-          coachId: this.data.coachId
-        }
+        name: 'getCoachInfo',
+        data: { coachId: this.data.coachId }
       })
 
-      if (res.result.success) {
+      if (res.result.success && res.result.data) {
         const coach = res.result.data
         this.setData({
-          formData: {
+          coachInfo: coach,
+          form: {
             name: coach.name || '',
-            avatarUrl: coach.avatarUrl || '',
+            nickname: coach.nickname || '',
             phone: coach.phone || '',
             specialty: coach.specialty || [],
             introduction: coach.introduction || '',
@@ -72,134 +89,65 @@ Page({
           }
         })
       } else {
-        util.showError(res.result.message || '加载失败')
-        setTimeout(() => {
-          wx.navigateBack()
-        }, 1500)
+        util.showError('加载教练信息失败')
       }
     } catch (err) {
+      console.error('加载教练信息失败:', err)
       util.showError('加载失败，请重试')
     } finally {
       this.setData({ loading: false })
     }
   },
 
-  // 选择头像
-  onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
+  // 表单输入
+  onInputChange(e) {
+    const { field } = e.currentTarget.dataset
+    const value = e.detail.value
     this.setData({
-      'formData.avatarUrl': avatarUrl
+      [`form.${field}`]: value
     })
   },
 
-  // 姓名输入
-  onNameInput(e) {
-    this.setData({
-      'formData.name': e.detail.value
-    })
-  },
+  // 专长选择
+  onSpecialtyChange(e) {
+    const specialties = this.data.form.specialty
+    const selected = e.currentTarget.dataset.specialty
+    const index = specialties.indexOf(selected)
 
-  // 电话输入
-  onPhoneInput(e) {
-    this.setData({
-      'formData.phone': e.detail.value
-    })
-  },
-
-  // 专长标签输入
-  onTagInput(e) {
-    this.setData({
-      tagInput: e.detail.value
-    })
-  },
-
-  // 添加标签
-  addTag() {
-    const tag = this.data.tagInput.trim()
-    if (!tag) return
-
-    if (this.data.formData.specialty.length >= 8) {
-      util.showToast('最多添加8个专长标签')
-      return
-    }
-
-    if (this.data.formData.specialty.includes(tag)) {
-      util.showToast('该标签已存在')
-      return
+    if (index > -1) {
+      // 取消选择
+      specialties.splice(index, 1)
+    } else {
+      // 添加选择（最多3个）
+      if (specialties.length < 3) {
+        specialties.push(selected)
+      } else {
+        util.showToast('最多选择3项专长')
+        return
+      }
     }
 
     this.setData({
-      'formData.specialty': [...this.data.formData.specialty, tag],
-      tagInput: ''
-    })
-  },
-
-  // 使用建议标签
-  useSuggestion(e) {
-    const tag = e.currentTarget.dataset.tag
-    if (this.data.formData.specialty.includes(tag)) {
-      util.showToast('该标签已存在')
-      return
-    }
-
-    if (this.data.formData.specialty.length >= 8) {
-      util.showToast('最多添加8个专长标签')
-      return
-    }
-
-    this.setData({
-      'formData.specialty': [...this.data.formData.specialty, tag]
-    })
-  },
-
-  // 删除标签
-  removeTag(e) {
-    const index = e.currentTarget.dataset.index
-    const specialty = [...this.data.formData.specialty]
-    specialty.splice(index, 1)
-    this.setData({
-      'formData.specialty': specialty
-    })
-  },
-
-  // 简介输入
-  onIntroInput(e) {
-    this.setData({
-      'formData.introduction': e.detail.value
-    })
-  },
-
-  // 经验输入
-  onExperienceInput(e) {
-    this.setData({
-      'formData.experience': e.detail.value
-    })
-  },
-
-  // 状态切换
-  onStatusChange(e) {
-    this.setData({
-      'formData.status': e.detail.value ? 1 : 0
+      'form.specialty': specialties
     })
   },
 
   // 保存
   async save() {
-    const { formData, coachId } = this.data
+    const { form, coachId } = this.data
 
-    // 验证必填项
-    if (!formData.name.trim()) {
+    // 表单验证
+    if (!form.name || !form.name.trim()) {
       util.showToast('请输入姓名')
       return
     }
 
-    if (formData.specialty.length === 0) {
-      util.showToast('请至少添加一个专长标签')
+    if (!form.nickname || !form.nickname.trim()) {
+      util.showToast('请输入昵称')
       return
     }
 
     this.setData({ saving: true })
-    wx.showLoading({ title: '保存中...' })
 
     try {
       const res = await wx.cloud.callFunction({
@@ -207,7 +155,15 @@ Page({
         data: {
           action: 'update',
           coachId: coachId,
-          coachData: formData
+          coachData: {
+            name: form.name.trim(),
+            nickname: form.nickname.trim(),
+            phone: form.phone,
+            specialty: form.specialty,
+            introduction: form.introduction,
+            experience: form.experience,
+            status: form.status
+          }
         }
       })
 
@@ -220,10 +176,43 @@ Page({
         util.showError(res.result.message || '保存失败')
       }
     } catch (err) {
+      console.error('保存失败:', err)
       util.showError('保存失败，请重试')
     } finally {
-      wx.hideLoading()
       this.setData({ saving: false })
+    }
+  },
+
+  // 删除教练
+  async deleteCoach() {
+    const confirm = await util.showConfirm('确定要删除该教练吗？删除后该用户将失去教练权限。')
+
+    if (!confirm) return
+
+    util.showLoading('删除中...')
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'manageCoach',
+        data: {
+          action: 'delete',
+          coachId: this.data.coachId
+        }
+      })
+
+      if (res.result.success) {
+        util.showSuccess('删除成功')
+        setTimeout(() => {
+          wx.navigateBack()
+        }, 1500)
+      } else {
+        util.showError(res.result.message || '删除失败')
+      }
+    } catch (err) {
+      console.error('删除失败:', err)
+      util.showError('删除失败，请重试')
+    } finally {
+      util.hideLoading()
     }
   }
 })

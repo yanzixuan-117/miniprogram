@@ -1,0 +1,70 @@
+<!--pages/admin/add-course/add-course.wxml-->
+<view class="add-course-container">
+  <view class="form-card">
+    <view class="form-header">
+      <text class="form-title">为学员添加课程</text>
+      <text class="student-name">{{studentName}}</text>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">课程名称</text>
+      <input
+        class="form-input"
+        placeholder="请输入课程名称，默认：网球课程"
+        value="{{courseName}}"
+        bindinput="onCourseNameInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label required">课次总数</text>
+      <input
+        class="form-input"
+        type="number"
+        placeholder="请输入课次总数"
+        value="{{totalSessions}}"
+        bindinput="onSessionsInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label required">结束日期</text>
+      <picker
+        mode="date"
+        value="{{endDate}}"
+        start="{{minDate}}"
+        bindchange="onEndDateChange">
+        <view class="picker-view">
+          <view class="picker-text {{endDate ? '' : 'placeholder'}}">{{endDate || '请选择结束日期'}}</view>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">指定教练</text>
+      <picker
+        mode="selector"
+        range="{{coachArray}}"
+        value="{{coachIndex}}"
+        bindchange="onCoachChange">
+        <view class="picker-view">
+          <view class="picker-text {{coachIndex >= 0 ? '' : 'placeholder'}}">
+            {{coachIndex >= 0 ? coachArray[coachIndex] : '请选择教练（可选）'}}
+          </view>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">备注</text>
+      <textarea
+        class="form-textarea"
+        placeholder="请输入备注信息（可选）"
+        value="{{notes}}"
+        bindinput="onNotesInput"
+        maxlength="200" />
+    </view>
+
+    <button class="submit-btn" bindtap="onSubmit">确认添加</button>
+  </view>
+</view>

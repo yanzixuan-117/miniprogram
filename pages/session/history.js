@@ -30,44 +30,45 @@ Page({
   loadCoachInfo: function() {
     var self = this
 
-    wx.getStorageSync({
-      key: 'userInfo',
-      success: function(res) {
-        var userInfo = res.data
-        if (!userInfo || !userInfo._openid) {
-          wx.navigateTo({
-            url: '/pages/login/login'
-          })
+    // 使用同步API获取用户信息
+    var userInfo = wx.getStorageSync('userInfo')
+
+    if (!userInfo || !userInfo._openid) {
+      wx.navigateTo({
+        url: '/pages/login/login'
+      })
+      return
+    }
+
+    var db = wx.cloud.database()
+
+    // 查询教练信息
+    db.collection('coaches')
+      .where({ _openid: userInfo._openid })
+      .get()
+      .then(function(coachRes) {
+        if (!coachRes.data || coachRes.data.length === 0) {
+          util.showError('需要教练权限')
+          setTimeout(function() {
+            wx.navigateBack()
+          }, 1500)
           return
         }
 
-        var db = wx.cloud.database()
+        var coach = coachRes.data[0]
 
-        // 查询教练信息
-        db.collection('coaches')
-          .where({ _openid: userInfo._openid })
-          .get()
-          .then(function(coachRes) {
-            if (!coachRes.data || coachRes.data.length === 0) {
-              util.showError('需要教练权限')
-              setTimeout(function() {
-                wx.navigateBack()
-              }, 1500)
-              return
-            }
+        self.setData({
+          coachId: coach._id
+        })
 
-            var coach = coachRes.data[0]
-            self.setData({ coachId: coach._id })
-
-            // 加载课程记录
-            self.loadSessionList()
-            self.loadStatistics()
-          })
-          .catch(function(err) {
-            util.showError('加载失败')
-          })
-      }
-    })
+        // 加载课程记录
+        self.loadSessionList()
+        self.loadStatistics()
+      })
+      .catch(function(err) {
+        console.error('查询教练信息失败:', err)
+        util.showError('加载失败')
+      })
   },
 
   onShow: function() {
@@ -107,8 +108,14 @@ Page({
     var db = wx.cloud.database()
     var _ = db.command
 
+    // 查询该教练已完成的课程记录
     var query = db.collection('bookings')
-      .where({ coachId: coachId, status: 'completed' })
+
+    // 首先尝试查询bookings.coachId == coaches._id
+    query = query.where({
+      coachId: coachId,
+      status: 'completed'
+    })
 
     // 应用日期筛选
     if (startDate && endDate) {
@@ -140,6 +147,7 @@ Page({
         })
       })
       .catch(function(err) {
+        console.error('查询课程记录失败:', err)
         util.showError('加载失败')
         self.setData({ loading: false })
       })
@@ -158,7 +166,10 @@ Page({
 
     // 获取所有已完成的课程记录
     db.collection('bookings')
-      .where({ coachId: coachId, status: 'completed' })
+      .where({
+        coachId: coachId,
+        status: 'completed'
+      })
       .get()
       .then(function(allRes) {
         var sessions = allRes.data || []
@@ -189,6 +200,7 @@ Page({
         })
       })
       .catch(function(err) {
+        console.error('查询统计数据失败:', err)
       })
   },
 

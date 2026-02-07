@@ -1,0 +1,158 @@
+/* pages/admin/add-course/add-course.wxss */
+.add-course-container {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding: 32rpx 24rpx;
+  box-sizing: border-box;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 48rpx 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.form-header {
+  margin-bottom: 48rpx;
+  text-align: center;
+  padding-bottom: 32rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.form-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12rpx;
+}
+
+.student-name {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
+.form-group {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.form-label.required::before {
+  content: '*';
+  color: #ff4d4f;
+  margin-right: 4rpx;
+  font-size: 28rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #fff;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  border-color: #667eea;
+  background: #fafbff;
+}
+
+.form-input::placeholder {
+  color: #bbb;
+  font-size: 28rpx;
+}
+
+.picker-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #fff;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  transition: all 0.2s;
+}
+
+.picker-view:active {
+  border-color: #667eea;
+  background: #fafbff;
+}
+
+.picker-text {
+  font-size: 30rpx;
+  color: #1a1a1a;
+}
+
+.picker-text.placeholder {
+  color: #bbb;
+}
+
+.picker-arrow {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  line-height: 1.6;
+}
+
+.form-textarea:focus {
+  border-color: #667eea;
+  background: #fafbff;
+}
+
+.form-textarea::placeholder {
+  color: #bbb;
+  font-size: 28rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 66rpx;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-top: 56rpx;
+  transition: all 0.2s;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.submit-btn:active {
+  background: #5568d3;
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 12rpx rgba(102, 126, 234, 0.25);
+}

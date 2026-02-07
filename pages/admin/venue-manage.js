@@ -1,5 +1,5 @@
-// pages/admin/venue-manage/venue-manage.js
-const util = require('../../../../utils/util.js')
+// pages/admin/venue-manage.js
+const util = require('../../utils/util.js')
 
 Page({
   data: {
@@ -19,10 +19,30 @@ Page({
   checkAdminPermission() {
     const app = getApp()
 
-    if (!app.isAdmin()) {
+    // 重新从 storage 加载用户信息以确保数据最新
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      app.globalData.userInfo = userInfo
+      app.globalData.userRole = userInfo.role
+      app.globalData.displayRole = userInfo.currentRole || userInfo.role
+      app.globalData.hasLogin = true
+    }
+
+    // 调试：打印用户角色信息
+    console.log('=== 球馆管理权限检查 ===')
+    console.log('实际角色 userRole:', app.globalData.userRole)
+    console.log('显示角色 displayRole:', app.globalData.displayRole)
+    console.log('userInfo.role:', userInfo ? userInfo.role : 'null')
+    console.log('userInfo.currentRole:', userInfo ? userInfo.currentRole : 'null')
+
+    // 管理员权限检查应该基于实际角色，而不是显示角色
+    // 管理员可以切换显示角色，但仍然保持管理员权限
+    const actualRole = app.globalData.userRole
+
+    if (actualRole !== 'admin') {
       wx.showModal({
         title: '权限提示',
-        content: '此功能仅限管理员访问',
+        content: '此功能仅限管理员访问\n当前角色：' + (actualRole || '未登录'),
         showCancel: false,
         success: () => {
           wx.navigateBack()
@@ -92,7 +112,7 @@ Page({
   // 跳转到添加球馆页面
   goToAddVenue() {
     wx.navigateTo({
-      url: '/pages/admin/venue-manage/venue-edit/venue-edit'
+      url: '/pages/admin/venue-edit'
     })
   },
 
@@ -100,7 +120,7 @@ Page({
   goToEditVenue(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/admin/venue-manage/venue-edit/venue-edit?id=${id}`
+      url: `/pages/admin/venue-edit?id=${id}`
     })
   },
 

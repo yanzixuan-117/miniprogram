@@ -17,7 +17,7 @@
       <view class="avatar-wrapper">
         <image
           class="avatar"
-          src="{{userInfo.avatarUrl || '/images/avatar.png'}}"
+          src="{{userInfo.avatarUrl }}"
           mode="aspectFill"
         ></image>
         <view class="avatar-border"></view>
@@ -110,10 +110,6 @@
         <text class="stat-number">{{stats.completedSessions}}</text>
         <text class="stat-label">已完成</text>
       </view>
-      <view class="stat-item">
-        <text class="stat-number">{{stats.favoriteVideos}}</text>
-        <text class="stat-label">收藏视频</text>
-      </view>
     </view>
 
     <!-- 功能菜单 -->
@@ -124,13 +120,13 @@
           <view class="menu-card-icon">📅</view>
           <text class="menu-card-text">我的预约</text>
         </view>
+        <view class="menu-card" wx:if="{{canViewStudent}}" bindtap="goToFixedBookings">
+          <view class="menu-card-icon">🔄</view>
+          <text class="menu-card-text">固定预约</text>
+        </view>
         <view class="menu-card" bindtap="goToMyRecords">
           <view class="menu-card-icon">📝</view>
           <text class="menu-card-text">课程记录</text>
-        </view>
-        <view class="menu-card" bindtap="goToFavorites">
-          <view class="menu-card-icon">⭐</view>
-          <text class="menu-card-text">我的收藏</text>
         </view>
         <view class="menu-card" wx:if="{{canViewCoach}}" bindtap="goToSessionHistory">
           <view class="menu-card-icon">📊</view>
@@ -149,29 +145,29 @@
         <text class="arrow">></text>
       </view>
 
-      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToCoachProfile">
+      <!-- <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToCoachProfile">
         <view class="menu-icon">👨‍🏫</view>
         <text class="menu-text">教练资料</text>
         <text class="arrow">></text>
-      </view>
+      </view> -->
 
-      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToSchedule">
+      <!-- <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToSchedule">
         <view class="menu-icon">⏰</view>
         <text class="menu-text">时间设置</text>
         <text class="arrow">></text>
-      </view>
+      </view> -->
 
-      <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToVideoManage">
+      <!-- <view class="menu-item" wx:if="{{canViewCoach}}" bindtap="goToVideoManage">
         <view class="menu-icon">🎬</view>
         <text class="menu-text">视频管理</text>
         <text class="arrow">></text>
-      </view>
+      </view> -->
 
-      <view class="menu-item" wx:if="{{canViewAdmin}}" bindtap="goToAdminManage">
+      <!-- <view class="menu-item" wx:if="{{canViewAdmin}}" bindtap="goToAdminManage">
         <view class="menu-icon">⚡</view>
         <text class="menu-text">管理员功能</text>
         <text class="arrow">></text>
-      </view>
+      </view> -->
 
       <view class="menu-item" bindtap="goToSettings">
         <view class="menu-icon">⚙️</view>
