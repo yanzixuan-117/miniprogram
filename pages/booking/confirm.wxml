@@ -66,8 +66,8 @@
 
     <!-- 上课人列表 -->
     <view class="students-list" wx:if="{{students.length > 0}}">
-      <view class="student-item" wx:for="{{students}}" wx:key="name">
-        <text class="student-name">{{item.name}}</text>
+      <view class="student-item" wx:for="{{students}}" wx:key="openid">
+        <text class="student-name">{{item.nickName || item.name}}</text>
         <text class="delete-btn" catchtap="removeStudent" data-index="{{index}}">删除</text>
       </view>
     </view>
@@ -75,7 +75,7 @@
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{students.length === 0}}">
       <text class="empty-text">暂无添加的上课人</text>
-      <text class="empty-hint">点击上方"添加"按钮，添加一起上课的朋友（只需填写姓名）</text>
+      <text class="empty-hint">如需和朋友一起上课，点击上方"添加"按钮选择学员</text>
     </view>
   </view>
 
@@ -120,28 +120,46 @@
 
 <!-- 添加上课人弹窗 -->
 <view class="modal-overlay" wx:if="{{showAddStudent}}" catchtap="hideAddStudentModal">
-  <view class="modal-content" catchtap="stopPropagation">
+  <view class="modal-content select-student-modal" catchtap="stopPropagation">
     <view class="modal-header">
-      <text class="modal-title">添加上课人</text>
+      <text class="modal-title">选择上课人</text>
       <text class="modal-close" catchtap="hideAddStudentModal">✕</text>
     </view>
 
     <view class="modal-body">
-      <view class="form-item">
-        <text class="form-label">姓名</text>
-        <input
-          class="form-input"
-          type="text"
-          placeholder="请输入一起上课的朋友姓名"
-          value="{{newStudentName}}"
-          bindinput="onStudentNameInput"
-        />
+      <!-- 加载状态 -->
+      <view class="loading-state" wx:if="{{loadingStudents}}">
+        <text class="loading-text">加载学员列表中...</text>
       </view>
+
+      <!-- 学员列表 -->
+      <scroll-view class="students-select-list" scroll-y wx:if="{{!loadingStudents}}">
+        <view
+          class="student-select-item {{selectedStudentOpenid === item._openid ? 'selected' : ''}}"
+          wx:for="{{availableStudents}}"
+          wx:key="_openid"
+          catchtap="selectStudent"
+          data-student="{{item}}"
+        >
+          <image class="student-avatar-small" src="{{item.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+          <view class="student-info-small">
+            <text class="student-name-small">{{item.nickName}}</text>
+            <text class="student-openid">{{item._openid}}</text>
+          </view>
+          <text class="select-check" wx:if="{{selectedStudentOpenid === item._openid}}">✓</text>
+        </view>
+
+        <!-- 空状态 -->
+        <view class="empty-state-small" wx:if="{{availableStudents.length === 0}}">
+          <text class="empty-icon">👥</text>
+          <text class="empty-text">暂无可选学员</text>
+        </view>
+      </scroll-view>
     </view>
 
     <view class="modal-footer">
       <button class="modal-btn cancel-btn" catchtap="hideAddStudentModal">取消</button>
-      <button class="modal-btn confirm-btn" catchtap="addStudent">确定</button>
+      <button class="modal-btn confirm-btn {{!selectedStudentOpenid ? 'disabled' : ''}}" catchtap="confirmAddStudent" disabled="{{!selectedStudentOpenid}}">确定</button>
     </view>
   </view>
 </view>

@@ -356,8 +356,8 @@ Page({
   // 关于我们
   goToAbout: function() {
     wx.showModal({
-      title: '关于挥拍GO',
-      content: '挥拍GO是一款专业的网球教练教学管理平台\n\n版本：v0.1.0\n\n功能特色：\n- 在线预约课程\n- 课程记录与反馈\n- 教学视频学习',
+      title: '关于欢豚GO',
+      content: '欢豚GO是一款专业的网球教练教学管理平台\n\n版本：v0.1.0\n\n功能特色：\n- 在线预约课程\n- 课程记录与反馈\n- 教学视频学习',
       showCancel: false
     })
   },

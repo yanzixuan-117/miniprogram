@@ -1,13 +1,5 @@
 <!--pages/video/list.wxml-->
 <view class="container">
-  <!-- 搜索栏 -->
-  <view class="search-bar">
-    <view class="search-box" bindtap="goToSearch">
-      <text class="search-placeholder">搜索视频...</text>
-      <text class="search-icon">🔍</text>
-    </view>
-  </view>
-
   <!-- 分类标签 -->
   <scroll-view class="category-tabs" scroll-x>
     <view class="tab-item {{activeCategory === '' ? 'active' : ''}}" bindtap="selectCategory" data-category="">

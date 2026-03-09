@@ -5,6 +5,59 @@
   background: #f7f7f7;
 }
 
+/* ============= 未登录提示横幅 ============= */
+.login-prompt-banner {
+  margin: 16rpx 32rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.prompt-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+  gap: 16rpx;
+}
+
+.prompt-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.prompt-icon {
+  font-size: 36rpx;
+  flex-shrink: 0;
+}
+
+.prompt-text {
+  font-size: 26rpx;
+  color: #fff;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.prompt-login-btn {
+  flex-shrink: 0;
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 28rpx;
+  background: #fff;
+  color: #667eea;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.prompt-login-btn::after {
+  border: none;
+}
+
 /* ============= 未登录状态 ============= */
 .not-login {
   min-height: 100vh;

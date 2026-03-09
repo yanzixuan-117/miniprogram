@@ -24,9 +24,13 @@ Page({
     loadingVenues: true,
 
     // 上课人列表
-    students: [], // [{name: '张三'}]
+    students: [], // [{openid: 'xxx', name: '张三', nickName: '张三'}]
     showAddStudent: false,
-    newStudentName: ''
+
+    // 选择学员相关
+    availableStudents: [], // 可选择的学员列表
+    selectedStudentOpenid: '', // 当前选中的学员openid
+    loadingStudents: false
   },
 
   // 计算安全的头像URL
@@ -158,9 +162,41 @@ Page({
 
   // 显示添加上课人弹窗
   showAddStudentModal: function() {
-    this.setData({
+    var self = this
+    self.setData({
       showAddStudent: true,
-      newStudentName: ''
+      selectedStudentOpenid: '',
+      loadingStudents: true
+    })
+
+    // 获取当前用户的openid
+    var app = getApp()
+    var currentUserOpenid = app.globalData.userInfo && app.globalData.userInfo._openid
+
+    // 加载学员列表
+    wx.cloud.callFunction({
+      name: 'getStudents',
+      data: {
+        excludeOpenid: currentUserOpenid // 排除当前预约人
+      }
+    }).then(function(res) {
+      if (res.result && res.result.success) {
+        self.setData({
+          availableStudents: res.result.data || [],
+          loadingStudents: false
+        })
+      } else {
+        util.showError('获取学员列表失败')
+        self.setData({
+          loadingStudents: false
+        })
+      }
+    }).catch(function(err) {
+      console.error('获取学员列表失败:', err)
+      util.showError('获取学员列表失败')
+      self.setData({
+        loadingStudents: false
+      })
     })
   },
 
@@ -168,37 +204,43 @@ Page({
   hideAddStudentModal: function() {
     this.setData({
       showAddStudent: false,
-      newStudentName: ''
+      selectedStudentOpenid: ''
     })
   },
 
-  // 输入上课人姓名
-  onStudentNameInput: function(e) {
+  // 选择学员
+  selectStudent: function(e) {
+    var student = e.currentTarget.dataset.student
     this.setData({
-      newStudentName: e.detail.value
+      selectedStudentOpenid: student._openid
     })
   },
 
-  // 添加上课人
-  addStudent: function() {
-    var name = this.data.newStudentName.trim()
-
-    if (!name) {
-      util.showToast('请输入姓名')
+  // 确认添加选中的学员
+  confirmAddStudent: function() {
+    var selectedOpenid = this.data.selectedStudentOpenid
+    if (!selectedOpenid) {
+      util.showToast('请选择学员')
       return
     }
 
-    // 检查是否重复添加
-    var isDuplicate = false
-    for (var i = 0; i < this.data.students.length; i++) {
-      if (this.data.students[i].name === name) {
-        isDuplicate = true
-        break
-      }
+    // 查找选中的学员
+    var selectedStudent = this.data.availableStudents.find(function(s) {
+      return s._openid === selectedOpenid
+    })
+
+    if (!selectedStudent) {
+      util.showToast('学员信息错误')
+      return
     }
 
+    // 检查是否已经添加过
+    var isDuplicate = this.data.students.some(function(s) {
+      return s.openid === selectedOpenid
+    })
+
     if (isDuplicate) {
-      util.showToast('该姓名已添加')
+      util.showToast('该学员已添加')
       return
     }
 
@@ -207,12 +249,16 @@ Page({
     for (var i = 0; i < this.data.students.length; i++) {
       newStudents.push(this.data.students[i])
     }
-    newStudents.push({ name: name })
+    newStudents.push({
+      openid: selectedStudent._openid,
+      name: selectedStudent.nickName,
+      nickName: selectedStudent.nickName
+    })
 
     this.setData({
       students: newStudents,
       showAddStudent: false,
-      newStudentName: ''
+      selectedStudentOpenid: ''
     })
 
     util.showSuccess('添加成功')

@@ -52,8 +52,24 @@ Page({
     var userRole = userInfo && userInfo.role || app.globalData.userRole
 
     if (!userInfo || !userInfo._openid) {
-      wx.navigateTo({
-        url: '/pages/login/login'
+      // 未登录时，显示提示后返回首页，而不是强制跳转到登录页（避免死循环）
+      wx.showModal({
+        title: '提示',
+        content: '该功能需要登录后才能使用，是否立即登录？',
+        confirmText: '去登录',
+        cancelText: '再逛逛',
+        success: function(res) {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          } else {
+            // 用户选择不登录，返回首页
+            wx.switchTab({
+              url: '/pages/index/index'
+            })
+          }
+        }
       })
       return
     }

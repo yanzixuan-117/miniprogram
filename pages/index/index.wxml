@@ -1,384 +1,376 @@
 <!--pages/index/index.wxml-->
 <view class="index-container">
-  <!-- 未登录状态 -->
-  <view class="not-login" wx:if="{{!hasLogin}}">
-    <view class="welcome-banner">
-      <view class="banner-bg">
-        <view class="bg-circle circle-1"></view>
-        <view class="bg-circle circle-2"></view>
+  <!-- 未登录提示横幅（放在顶部，但不阻止浏览） -->
+  <view class="login-prompt-banner" wx:if="{{!hasLogin}}">
+    <view class="prompt-content">
+      <view class="prompt-left">
+        <text class="prompt-icon">👋</text>
+        <text class="prompt-text">欢迎来到欢豚GO，登录后可预约课程、查看学习记录</text>
       </view>
-      <view class="banner-content">
-        <text class="logo-emoji">🎾</text>
-        <text class="title">挥拍GO</text>
-        <text class="subtitle">专业的网球教学管理平台</text>
-        <button class="login-btn" bindtap="goToLogin">立即登录</button>
+      <button class="prompt-login-btn" bindtap="goToLogin">登录</button>
+    </view>
+  </view>
+
+  <!-- 用户信息卡片（仅登录用户显示） -->
+  <view class="user-card" wx:if="{{hasLogin}}">
+    <image class="user-avatar" src="{{userInfo.avatarUrl }}" mode="aspectFill"></image>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickname}}</text>
+      <view class="user-role-badge {{userRole}}">
+        <text class="role-emoji">{{userRole === 'guest' ? '👤' : (userRole === 'student' ? '🎾' : (userRole === 'coach' ? '👨‍🏫' : '⭐'))}}</text>
+        <text class="role-text">{{userRole === 'guest' ? '游客' : (userRole === 'student' ? '学员' : (userRole === 'coach' ? '教练' : '管理员'))}}</text>
+      </view>
+    </view>
+    <view class="user-action">
+      <text class="action-icon">⚙️</text>
+    </view>
+  </view>
+
+  <!-- 学员视图（包括游客和未登录用户） -->
+  <view class="student-view" wx:if="{{!hasLogin || displayRole === 'student' || userRole === 'guest'}}">
+    <!-- 已登录游客提示横幅 -->
+    <view class="guest-banner" wx:if="{{hasLogin && userRole === 'guest'}}">
+      <text class="banner-icon">💡</text>
+      <text class="banner-text">您当前是游客身份，请联系管理员添加为学员后即可预约课程</text>
+    </view>
+
+    <!-- 统计数据（仅登录用户显示） -->
+    <view class="stats-bar" wx:if="{{hasLogin}}">
+      <view class="stat-item">
+        <text class="stat-number">{{studentStats.bookings || 0}}</text>
+        <text class="stat-label">已预约</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{studentStats.hours || 0}}</text>
+        <text class="stat-label">学习时长</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{studentStats.rating || 0}}</text>
+        <text class="stat-label">平均评分</text>
+      </view>
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="goToBooking">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">📅</text>
+        </view>
+        <text class="action-text">预约课程</text>
+      </view>
+      <view class="action-item" bindtap="goToCoaches">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">👨‍🏫</text>
+        </view>
+        <text class="action-text">找教练</text>
+      </view>
+      <view class="action-item" bindtap="goToMyRecords">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">📝</text>
+        </view>
+        <text class="action-text">课程记录</text>
+      </view>
+      <view class="action-item" bindtap="goToVideos">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">🎬</text>
+        </view>
+        <text class="action-text">教学视频</text>
+      </view>
+    </view>
+
+    <!-- 待审核的预约（仅登录用户显示） -->
+    <view class="section" wx:if="{{hasLogin && pendingBookings.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">{{displayRole === 'student' ? '预约记录' : '待审核预约'}}</text>
+        <text class="section-count">{{pendingBookings.length}}</text>
+      </view>
+      <view class="booking-list">
+        <view class="booking-item {{displayRole === 'student' ? '' : 'coach-booking'}}" wx:for="{{pendingBookings}}" wx:key="_id" bindtap="{{displayRole === 'student' ? 'viewBookingDetail' : 'handleBooking'}}" data-id="{{item._id}}">
+          <view class="booking-left">
+            <view class="booking-date">
+              <text class="date-day">{{item.dateText.day}}</text>
+              <text class="date-month">{{item.dateText.month}}月</text>
+              <text class="date-weekday">周{{item.dateText.weekday}}</text>
+            </view>
+            <view class="booking-info">
+              <text class="{{displayRole === 'student' ? 'coach-name' : 'student-name'}}">{{displayRole === 'student' ? (item.coachName || '教练') : item.studentName}}</text>
+              <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
+              <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
+              <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
+              <!-- 上课人列表 -->
+              <view class="students-info" wx:if="{{displayRole === 'coach' && item.students && item.students.length > 0}}">
+                <text class="students-label">上课人：</text>
+                <text class="students-names">
+                  <text>{{item.studentName}}</text>
+                  <text>、</text>
+                  <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
+                    <text>{{student.name}}</text>
+                    <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
+                  </block>
+                </text>
+              </view>
+            </view>
+          </view>
+          <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 待上课的课程（仅登录用户显示） -->
+    <view class="section" wx:if="{{hasLogin && confirmedBookings.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">{{displayRole === 'student' ? '待上课' : '课程安排'}}</text>
+      </view>
+      <view class="booking-list">
+        <view class="booking-item {{displayRole === 'student' ? '' : 'coach-booking'}}" wx:for="{{confirmedBookings}}" wx:key="_id" bindtap="{{displayRole === 'student' ? 'viewBookingDetail' : 'handleBooking'}}" data-id="{{item._id}}">
+          <view class="booking-left">
+            <view class="booking-date">
+              <text class="date-day">{{item.dateText.day}}</text>
+              <text class="date-month">{{item.dateText.month}}月</text>
+              <text class="date-weekday">周{{item.dateText.weekday}}</text>
+            </view>
+            <view class="booking-info">
+              <text class="{{displayRole === 'student' ? 'coach-name' : 'student-name'}}">{{displayRole === 'student' ? (item.coachName || '教练') : item.studentName}}</text>
+              <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
+              <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
+              <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
+              <!-- 上课人列表 -->
+              <view class="students-info" wx:if="{{displayRole === 'coach' && item.students && item.students.length > 0}}">
+                <text class="students-label">上课人：</text>
+                <text class="students-names">
+                  <text>{{item.studentName}}</text>
+                  <text>、</text>
+                  <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
+                    <text>{{student.name}}</text>
+                    <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
+                  </block>
+                </text>
+              </view>
+            </view>
+          </view>
+          <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态（仅登录用户显示） -->
+    <view class="empty-state" wx:if="{{hasLogin && pendingBookings.length === 0 && confirmedBookings.length === 0}}">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">{{displayRole === 'student' ? '今天暂无课程' : '今天暂无课程安排'}}</text>
+      <text class="empty-hint">{{displayRole === 'student' ? '快去预约一节网球课程吧' : ''}}</text>
+    </view>
+
+    <!-- 推荐教练（所有用户可见） -->
+    <view class="section" wx:if="{{recommendedCoaches.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">推荐教练</text>
+        <text class="more" bindtap="goToCoaches">查看全部 ></text>
+      </view>
+      <scroll-view class="coach-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="coach-list">
+          <view class="coach-card" wx:for="{{recommendedCoaches}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
+            <image class="coach-avatar"
+                   src="{{item.avatarUrl || item.cloudAvatarUrl }}"
+                   mode="aspectFill"
+                   binderror="onImageError"
+                   data-index="{{index}}"
+                   data-cloudurl="{{item.cloudAvatarUrl}}">
+            </image>
+            <text class="coach-name">{{item.name || '教练'}}</text>
+            <view class="coach-rating">
+              <text class="star">⭐</text>
+              <text class="rating">{{item.rating || '5.0'}}</text>
+              <text class="count">({{item.reviewCount || 0}})</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 热门教程（所有用户可见） -->
+    <view class="section" wx:if="{{hotVideos.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">热门教程</text>
+        <text class="more" bindtap="goToVideos">查看全部 ></text>
+      </view>
+      <view class="video-grid">
+        <view class="video-item" wx:for="{{hotVideos}}" wx:key="_id" bindtap="watchVideo" data-id="{{item._id}}">
+          <image class="video-thumb" src="{{item.thumbnail || '/images/default-video.png'}}" mode="aspectFill"></image>
+          <view class="video-play">
+            <text class="play-icon">▶</text>
+          </view>
+          <text class="video-title">{{item.title}}</text>
+          <view class="video-info">
+            <text class="view-count">👁 {{item.viewCount || 0}}</text>
+            <text class="duration">⏱ {{item.durationText || '00:00'}}</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 已登录状态 -->
-  <view class="logged-in" wx:if="{{hasLogin}}">
-    <!-- 用户信息卡片 -->
-    <view class="user-card">
-      <image class="user-avatar" src="{{userInfo.avatarUrl }}" mode="aspectFill"></image>
-      <view class="user-info">
-        <text class="user-name">{{userInfo.nickname}}</text>
-        <view class="user-role-badge {{userRole}}">
-          <text class="role-emoji">{{userRole === 'guest' ? '👤' : (userRole === 'student' ? '🎾' : (userRole === 'coach' ? '👨‍🏫' : '⭐'))}}</text>
-          <text class="role-text">{{userRole === 'guest' ? '游客' : (userRole === 'student' ? '学员' : (userRole === 'coach' ? '教练' : '管理员'))}}</text>
-        </view>
+  <!-- 教练视图（仅登录的教练/管理员可见） -->
+  <view class="coach-view" wx:if="{{hasLogin && (displayRole === 'coach' || displayRole === 'admin')}}">
+    <!-- 统计数据 -->
+    <view class="stats-bar">
+      <view class="stat-item">
+        <text class="stat-number">{{coachStats.pendingCount || 0}}</text>
+        <text class="stat-label">待审核</text>
       </view>
-      <view class="user-action">
-        <text class="action-icon">⚙️</text>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{coachStats.todayCount || 0}}</text>
+        <text class="stat-label">今日课程</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{coachStats.totalStudents || 0}}</text>
+        <text class="stat-label">学员总数</text>
       </view>
     </view>
 
-    <!-- 学员视图（包括游客） -->
-    <view class="student-view" wx:if="{{displayRole === 'student' || userRole === 'guest'}}">
-      <!-- 游客提示横幅 -->
-      <view class="guest-banner" wx:if="{{userRole === 'guest'}}">
-        <text class="banner-icon">💡</text>
-        <text class="banner-text">您当前是游客身份，请联系管理员添加为学员后即可预约课程</text>
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="goToBookingManage">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">📋</text>
+        </view>
+        <text class="action-text">预约管理</text>
       </view>
-
-      <!-- 统计数据 -->
-      <view class="stats-bar">
-        <view class="stat-item">
-          <text class="stat-number">{{studentStats.bookings || 0}}</text>
-          <text class="stat-label">已预约</text>
+      <view class="action-item" bindtap="goToSessionHistory">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">📝</text>
         </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-number">{{studentStats.hours || 0}}</text>
-          <text class="stat-label">学习时长</text>
-        </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-number">{{studentStats.rating || 0}}</text>
-          <text class="stat-label">平均评分</text>
-        </view>
+        <text class="action-text">课程记录</text>
       </view>
+      <view class="action-item" bindtap="goToVideoUpload">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">🎬</text>
+        </view>
+        <text class="action-text">上传视频</text>
+      </view>
+      <view class="action-item" bindtap="goToSchedule">
+        <view class="action-icon-wrapper">
+          <text class="action-icon">⏰</text>
+        </view>
+        <text class="action-text">时间设置</text>
+      </view>
+    </view>
 
-      <!-- 快捷操作 -->
+    <!-- 管理员专属功能 -->
+    <view class="admin-section" wx:if="{{userRole === 'admin'}}">
+      <view class="section-header">
+        <text class="section-title">🛡️ 管理员功能</text>
+      </view>
       <view class="quick-actions">
-        <view class="action-item" bindtap="goToBooking">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">📅</text>
-          </view>
-          <text class="action-text">预约课程</text>
-        </view>
-        <view class="action-item" bindtap="goToCoaches">
-          <view class="action-icon-wrapper">
+        <view class="action-item" bindtap="goToCoachManage">
+          <view class="action-icon-wrapper admin">
             <text class="action-icon">👨‍🏫</text>
           </view>
-          <text class="action-text">找教练</text>
+          <text class="action-text">教练管理</text>
         </view>
-        <view class="action-item" bindtap="goToMyRecords">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">📝</text>
+        <view class="action-item" bindtap="goToVenueManage">
+          <view class="action-icon-wrapper admin">
+            <text class="action-icon">🏟️</text>
           </view>
-          <text class="action-text">课程记录</text>
+          <text class="action-text">球馆管理</text>
         </view>
-        <view class="action-item" bindtap="goToVideos">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">🎬</text>
+        <view class="action-item" bindtap="goToStudentManage">
+          <view class="action-icon-wrapper admin">
+            <text class="action-icon">🎓</text>
           </view>
-          <text class="action-text">教学视频</text>
+          <text class="action-text">学员管理</text>
         </view>
-      </view>
-
-      <!-- 待审核的预约 -->
-      <view class="section" wx:if="{{pendingBookings.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">{{displayRole === 'student' ? '预约记录' : '待审核预约'}}</text>
-          <text class="section-count">{{pendingBookings.length}}</text>
-        </view>
-        <view class="booking-list">
-          <view class="booking-item {{displayRole === 'student' ? '' : 'coach-booking'}}" wx:for="{{pendingBookings}}" wx:key="_id" bindtap="{{displayRole === 'student' ? 'viewBookingDetail' : 'handleBooking'}}" data-id="{{item._id}}">
-            <view class="booking-left">
-              <view class="booking-date">
-                <text class="date-day">{{item.dateText.day}}</text>
-                <text class="date-month">{{item.dateText.month}}月</text>
-                <text class="date-weekday">周{{item.dateText.weekday}}</text>
-              </view>
-              <view class="booking-info">
-                <text class="{{displayRole === 'student' ? 'coach-name' : 'student-name'}}">{{displayRole === 'student' ? (item.coachName || '教练') : item.studentName}}</text>
-                <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
-                <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
-                <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
-                <!-- 上课人列表 -->
-                <view class="students-info" wx:if="{{displayRole === 'coach' && item.students && item.students.length > 0}}">
-                  <text class="students-label">上课人：</text>
-                  <text class="students-names">
-                    <text>{{item.studentName}}</text>
-                    <text>、</text>
-                    <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
-                      <text>{{student.name}}</text>
-                      <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
-                    </block>
-                  </text>
-                </view>
-              </view>
-            </view>
-            <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
+        <view class="action-item" bindtap="goToRoleSwitch">
+          <view class="action-icon-wrapper admin">
+            <text class="action-icon">🔄</text>
           </view>
-        </view>
-      </view>
-
-      <!-- 待上课的课程 -->
-      <view class="section" wx:if="{{confirmedBookings.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">{{displayRole === 'student' ? '待上课' : '课程安排'}}</text>
-        </view>
-        <view class="booking-list">
-          <view class="booking-item {{displayRole === 'student' ? '' : 'coach-booking'}}" wx:for="{{confirmedBookings}}" wx:key="_id" bindtap="{{displayRole === 'student' ? 'viewBookingDetail' : 'handleBooking'}}" data-id="{{item._id}}">
-            <view class="booking-left">
-              <view class="booking-date">
-                <text class="date-day">{{item.dateText.day}}</text>
-                <text class="date-month">{{item.dateText.month}}月</text>
-                <text class="date-weekday">周{{item.dateText.weekday}}</text>
-              </view>
-              <view class="booking-info">
-                <text class="{{displayRole === 'student' ? 'coach-name' : 'student-name'}}">{{displayRole === 'student' ? (item.coachName || '教练') : item.studentName}}</text>
-                <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
-                <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
-                <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
-                <!-- 上课人列表 -->
-                <view class="students-info" wx:if="{{displayRole === 'coach' && item.students && item.students.length > 0}}">
-                  <text class="students-label">上课人：</text>
-                  <text class="students-names">
-                    <text>{{item.studentName}}</text>
-                    <text>、</text>
-                    <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
-                      <text>{{student.name}}</text>
-                      <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
-                    </block>
-                  </text>
-                </view>
-              </view>
-            </view>
-            <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 空状态 -->
-      <view class="empty-state" wx:if="{{pendingBookings.length === 0 && confirmedBookings.length === 0}}">
-        <text class="empty-icon">📅</text>
-        <text class="empty-text">{{displayRole === 'student' ? '今天暂无课程' : '今天暂无课程安排'}}</text>
-        <text class="empty-hint">{{displayRole === 'student' ? '快去预约一节网球课程吧' : ''}}</text>
-      </view>
-
-      <!-- 推荐教练 -->
-      <view class="section" wx:if="{{recommendedCoaches.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">推荐教练</text>
-          <text class="more" bindtap="goToCoaches">查看全部 ></text>
-        </view>
-        <scroll-view class="coach-scroll" scroll-x enhanced show-scrollbar="{{false}}">
-          <view class="coach-list">
-            <view class="coach-card" wx:for="{{recommendedCoaches}}" wx:key="_id" bindtap="viewCoachDetail" data-id="{{item._id}}">
-              <image class="coach-avatar"
-                     src="{{item.avatarUrl || item.cloudAvatarUrl }}"
-                     mode="aspectFill"
-                     binderror="onImageError"
-                     data-index="{{index}}"
-                     data-cloudurl="{{item.cloudAvatarUrl}}">
-              </image>
-              <text class="coach-name">{{item.name || '教练'}}</text>
-              <view class="coach-rating">
-                <text class="star">⭐</text>
-                <text class="rating">{{item.rating || '5.0'}}</text>
-                <text class="count">({{item.reviewCount || 0}})</text>
-              </view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-
-      <!-- 热门教程 -->
-      <view class="section" wx:if="{{hotVideos.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">热门教程</text>
-          <text class="more" bindtap="goToVideos">查看全部 ></text>
-        </view>
-        <view class="video-grid">
-          <view class="video-item" wx:for="{{hotVideos}}" wx:key="_id" bindtap="watchVideo" data-id="{{item._id}}">
-            <image class="video-thumb" src="{{item.thumbnail || '/images/default-video.png'}}" mode="aspectFill"></image>
-            <view class="video-play">
-              <text class="play-icon">▶</text>
-            </view>
-            <text class="video-title">{{item.title}}</text>
-            <view class="video-info">
-              <text class="view-count">👁 {{item.viewCount || 0}}</text>
-              <text class="duration">⏱ {{item.durationText || '00:00'}}</text>
-            </view>
-          </view>
+          <text class="action-text">角色切换</text>
         </view>
       </view>
     </view>
 
-    <!-- 教练视图 -->
-    <view class="coach-view" wx:if="{{displayRole === 'coach' || displayRole === 'admin'}}">
-      <!-- 统计数据 -->
-      <view class="stats-bar">
-        <view class="stat-item">
-          <text class="stat-number">{{coachStats.pendingCount || 0}}</text>
-          <text class="stat-label">待审核</text>
-        </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-number">{{coachStats.todayCount || 0}}</text>
-          <text class="stat-label">今日课程</text>
-        </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-number">{{coachStats.totalStudents || 0}}</text>
-          <text class="stat-label">学员总数</text>
-        </view>
+    <!-- 待审核的预约 -->
+    <view class="section" wx:if="{{pendingBookings.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">待审核预约</text>
+        <text class="section-count">{{pendingBookings.length}}</text>
       </view>
-
-      <!-- 快捷操作 -->
-      <view class="quick-actions">
-        <view class="action-item" bindtap="goToBookingManage">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">📋</text>
-          </view>
-          <text class="action-text">预约管理</text>
-        </view>
-        <view class="action-item" bindtap="goToSessionHistory">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">📝</text>
-          </view>
-          <text class="action-text">课程记录</text>
-        </view>
-        <view class="action-item" bindtap="goToVideoUpload">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">🎬</text>
-          </view>
-          <text class="action-text">上传视频</text>
-        </view>
-        <view class="action-item" bindtap="goToSchedule">
-          <view class="action-icon-wrapper">
-            <text class="action-icon">⏰</text>
-          </view>
-          <text class="action-text">时间设置</text>
-        </view>
-      </view>
-
-      <!-- 管理员专属功能 -->
-      <view class="admin-section" wx:if="{{userRole === 'admin'}}">
-        <view class="section-header">
-          <text class="section-title">🛡️ 管理员功能</text>
-        </view>
-        <view class="quick-actions">
-          <view class="action-item" bindtap="goToCoachManage">
-            <view class="action-icon-wrapper admin">
-              <text class="action-icon">👨‍🏫</text>
+      <view class="booking-list">
+        <view class="booking-item coach-booking" wx:for="{{pendingBookings}}" wx:key="_id" bindtap="handleBooking" data-id="{{item._id}}">
+          <view class="booking-left">
+            <view class="booking-date">
+              <text class="date-day">{{item.dateText.day}}</text>
+              <text class="date-month">{{item.dateText.month}}月</text>
+              <text class="date-weekday">周{{item.dateText.weekday}}</text>
             </view>
-            <text class="action-text">教练管理</text>
-          </view>
-          <view class="action-item" bindtap="goToVenueManage">
-            <view class="action-icon-wrapper admin">
-              <text class="action-icon">🏟️</text>
-            </view>
-            <text class="action-text">球馆管理</text>
-          </view>
-          <view class="action-item" bindtap="goToStudentManage">
-            <view class="action-icon-wrapper admin">
-              <text class="action-icon">🎓</text>
-            </view>
-            <text class="action-text">学员管理</text>
-          </view>
-          <view class="action-item" bindtap="goToRoleSwitch">
-            <view class="action-icon-wrapper admin">
-              <text class="action-icon">🔄</text>
-            </view>
-            <text class="action-text">角色切换</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 待审核的预约 -->
-      <view class="section" wx:if="{{pendingBookings.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">待审核预约</text>
-          <text class="section-count">{{pendingBookings.length}}</text>
-        </view>
-        <view class="booking-list">
-          <view class="booking-item coach-booking" wx:for="{{pendingBookings}}" wx:key="_id" bindtap="handleBooking" data-id="{{item._id}}">
-            <view class="booking-left">
-              <view class="booking-date">
-                <text class="date-day">{{item.dateText.day}}</text>
-                <text class="date-month">{{item.dateText.month}}月</text>
-                <text class="date-weekday">周{{item.dateText.weekday}}</text>
-              </view>
-              <view class="booking-info">
-                <text class="student-name">{{item.studentName}}</text>
-                <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
-                <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
-                <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
-                <!-- 上课人列表 -->
-                <view class="students-info" wx:if="{{item.students && item.students.length > 0}}">
-                  <text class="students-label">上课人：</text>
-                  <text class="students-names">
-                    <text>{{item.studentName}}</text>
-                    <text>、</text>
-                    <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
-                      <text>{{student.name}}</text>
-                      <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
-                    </block>
-                  </text>
-                </view>
+            <view class="booking-info">
+              <text class="student-name">{{item.studentName}}</text>
+              <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
+              <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
+              <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
+              <!-- 上课人列表 -->
+              <view class="students-info" wx:if="{{item.students && item.students.length > 0}}">
+                <text class="students-label">上课人：</text>
+                <text class="students-names">
+                  <text>{{item.studentName}}</text>
+                  <text>、</text>
+                  <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
+                    <text>{{student.name}}</text>
+                    <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
+                  </block>
+                </text>
               </view>
             </view>
-            <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
           </view>
+          <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
         </view>
       </view>
+    </view>
 
-      <!-- 待上课的课程 -->
-      <view class="section" wx:if="{{confirmedBookings.length > 0}}">
-        <view class="section-header">
-          <text class="section-title">课程安排</text>
-        </view>
-        <view class="booking-list">
-          <view class="booking-item coach-booking" wx:for="{{confirmedBookings}}" wx:key="_id" bindtap="handleBooking" data-id="{{item._id}}">
-            <view class="booking-left">
-              <view class="booking-date">
-                <text class="date-day">{{item.dateText.day}}</text>
-                <text class="date-month">{{item.dateText.month}}月</text>
-                <text class="date-weekday">周{{item.dateText.weekday}}</text>
-              </view>
-              <view class="booking-info">
-                <text class="student-name">{{item.studentName}}</text>
-                <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
-                <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
-                <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
-                <!-- 上课人列表 -->
-                <view class="students-info" wx:if="{{item.students && item.students.length > 0}}">
-                  <text class="students-label">上课人：</text>
-                  <text class="students-names">
-                    <text>{{item.studentName}}</text>
-                    <text>、</text>
-                    <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
-                      <text>{{student.name}}</text>
-                      <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
-                    </block>
-                  </text>
-                </view>
+    <!-- 待上课的课程 -->
+    <view class="section" wx:if="{{confirmedBookings.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">课程安排</text>
+      </view>
+      <view class="booking-list">
+        <view class="booking-item coach-booking" wx:for="{{confirmedBookings}}" wx:key="_id" bindtap="handleBooking" data-id="{{item._id}}">
+          <view class="booking-left">
+            <view class="booking-date">
+              <text class="date-day">{{item.dateText.day}}</text>
+              <text class="date-month">{{item.dateText.month}}月</text>
+              <text class="date-weekday">周{{item.dateText.weekday}}</text>
+            </view>
+            <view class="booking-info">
+              <text class="student-name">{{item.studentName}}</text>
+              <text class="booking-time">{{item.startTime}}-{{item.endTime}}</text>
+              <text class="booking-date-text" wx:if="{{item.venue}}">📍 {{item.venue}}</text>
+              <text class="fixed-badge" wx:if="{{item.isFixed}}">🔄 固定</text>
+              <!-- 上课人列表 -->
+              <view class="students-info" wx:if="{{item.students && item.students.length > 0}}">
+                <text class="students-label">上课人：</text>
+                <text class="students-names">
+                  <text>{{item.studentName}}</text>
+                  <text>、</text>
+                  <block wx:for="{{item.students}}" wx:key="name" wx:for-index="sIdx" wx:for-item="student">
+                    <text>{{student.name}}</text>
+                    <text wx:if="{{sIdx < item.students.length - 1}}">、</text>
+                  </block>
+                </text>
               </view>
             </view>
-            <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
           </view>
+          <view class="booking-status status-{{item.status}}">{{item.statusText}}</view>
         </view>
       </view>
+    </view>
 
-      <!-- 空状态 -->
-      <view class="empty-state" wx:if="{{pendingBookings.length === 0 && confirmedBookings.length === 0}}">
-        <text class="empty-icon">📅</text>
-        <text class="empty-text">今天暂无课程安排</text>
-      </view>
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{pendingBookings.length === 0 && confirmedBookings.length === 0}}">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">今天暂无课程安排</text>
     </view>
   </view>
 </view>

@@ -4,7 +4,7 @@
   <view class="not-login" wx:if="{{!hasLogin}}">
     <view class="login-prompt">
       <view class="login-icon">🎾</view>
-      <text class="login-title">欢迎使用挥拍GO</text>
+      <text class="login-title">欢迎使用欢豚GO</text>
       <text class="login-subtitle">请先登录以使用全部功能</text>
       <button class="login-btn" bindtap="goToLogin">立即登录</button>
     </view>

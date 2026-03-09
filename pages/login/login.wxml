@@ -11,7 +11,7 @@
         <!-- Logo区域 -->
         <view class="logo-section">
             <text class="logo-emoji">🎾</text>
-            <text class="app-name">挥拍GO</text>
+            <text class="app-name">欢豚GO</text>
             <text class="app-slogan">专业的网球教学管理平台</text>
         </view>
 
@@ -96,7 +96,7 @@
                 <text class="success-emoji">🎉</text>
             </view>
             <text class="success-title">登录成功！</text>
-            <text class="success-desc">欢迎加入挥拍GO</text>
+            <text class="success-desc">欢迎加入欢豚GO</text>
         </view>
         <view class="user-info-card" wx:if="{{userInfo}}">
             <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>

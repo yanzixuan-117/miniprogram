@@ -141,8 +141,6 @@ Page({
         displayRole: displayRole,
         userInfo: userInfo
       })
-
-      this.loadData()
     } else {
       // storage 没有数据，使用 globalData 的值
       var actualRole = app.globalData.userRole
@@ -159,15 +157,20 @@ Page({
         displayRole: displayRole,
         userInfo: app.globalData.userInfo
       })
-
-      if (app.globalData.hasLogin) {
-        this.loadData()
-      }
     }
+
+    // 无论是否登录，都加载数据（允许游客浏览）
+    this.loadData()
   },
 
   // 加载数据
   loadData: async function() {
+    // 未登录用户也加载游客数据（推荐教练、热门视频等）
+    if (!this.data.hasLogin) {
+      await this.loadGuestData()
+      return
+    }
+
     // 使用 displayRole 来判断显示哪个视图
     var displayRole = this.data.displayRole || this.data.userRole
     var actualRole = this.data.userRole
@@ -177,6 +180,53 @@ Page({
       await this.loadStudentData()
     } else if (displayRole === 'coach' || displayRole === 'admin') {
       await this.loadCoachData()
+    }
+  },
+
+  // 加载游客数据（未登录用户可浏览的内容）
+  loadGuestData: async function() {
+    util.showLoading()
+
+    try {
+      // 清除图片URL缓存，确保强制转换云存储URL
+      util.clearCloudURLCache()
+
+      // 加载推荐教练
+      var coachesRes = await wx.cloud.callFunction({
+        name: 'getCoaches',
+        data: { status: 1 }
+      })
+      var recommendedCoaches = coachesRes.result.success ? (coachesRes.result.data || []).slice(0, 5) : []
+
+      // 批量转换教练头像云存储URL为临时URL
+      recommendedCoaches = await util.processListCloudURLs(recommendedCoaches, ['cloudAvatarUrl'], '', true)
+
+      // 加载热门视频
+      var videosRes = await util.getList('videos', { status: 1 }, 6)
+
+      // 批量转换视频封面云存储URL为临时URL
+      var videos = videosRes.data || []
+      videos = await util.processListCloudURLs(videos, ['thumbnail'], '', true)
+
+      // 格式化视频数据
+      var formattedVideos = this.formatVideos(videos)
+
+      this.setData({
+        studentStats: {
+          bookings: 0,
+          hours: 0,
+          rating: 0
+        },
+        pendingBookings: [],
+        confirmedBookings: [],
+        recommendedCoaches: recommendedCoaches,
+        hotVideos: formattedVideos
+      })
+    } catch (err) {
+      console.error('加载游客数据失败:', err)
+      util.showError('加载数据失败')
+    } finally {
+      util.hideLoading()
     }
   },
 
@@ -700,8 +750,33 @@ Page({
     })
   },
 
+  // 检查是否需要登录
+  checkLoginRequired: function() {
+    if (!this.data.hasLogin) {
+      var self = this
+      wx.showModal({
+        title: '提示',
+        content: '该功能需要登录后才能使用，是否立即登录？',
+        confirmText: '去登录',
+        cancelText: '再逛逛',
+        success: function(res) {
+          if (res.confirm) {
+            self.goToLogin()
+          }
+        }
+      })
+      return true
+    }
+    return false
+  },
+
   // 检查游客权限限制
   checkGuestRestriction: function() {
+    // 先检查是否登录
+    if (this.checkLoginRequired()) {
+      return true
+    }
+
     if (this.data.userRole === 'guest') {
       wx.showModal({
         title: '提示',

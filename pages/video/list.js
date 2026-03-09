@@ -117,13 +117,6 @@ Page({
     this.loadVideos(true)
   },
 
-  // 跳转搜索
-  goToSearch: function() {
-    wx.navigateTo({
-      url: '/pages/video/search'
-    })
-  },
-
   // 观看视频
   watchVideo: function(e) {
     var id = e.currentTarget.dataset.id

@@ -445,3 +445,110 @@
 .submit-btn::after {
   border: none;
 }
+
+/* 选择学员弹窗样式 */
+.select-student-modal {
+  max-height: 70vh;
+}
+
+.modal-content.select-student-modal {
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.students-select-list {
+  flex: 1;
+  max-height: 50vh;
+  padding: 0 24rpx;
+}
+
+.student-select-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  border: 2rpx solid #f0f0f0;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.student-select-item.selected {
+  border-color: #667eea;
+  background: #f7f7ff;
+}
+
+.student-select-item:active {
+  transform: scale(0.98);
+}
+
+.student-avatar-small {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  margin-right: 24rpx;
+}
+
+.student-info-small {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.student-name-small {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.student-openid {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.select-check {
+  width: 40rpx;
+  height: 40rpx;
+  background: #667eea;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-state-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-state-small .empty-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.empty-state-small .empty-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.confirm-btn.disabled {
+  background: #ccc;
+  opacity: 0.6;
+}

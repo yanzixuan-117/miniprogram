@@ -4,7 +4,7 @@
     <view class="agreement-title">用户协议</view>
 
     <view class="agreement-intro">
-      <text class="intro-text">欢迎使用"挥拍GO"（以下简称"本小程序"）。您在使用本小程序提供的课程预约服务前，请仔细阅读本协议。一旦您开始使用服务，即表示您已充分理解并同意本协议全部内容。</text>
+      <text class="intro-text">欢迎使用"欢豚GO"（以下简称"本小程序"）。您在使用本小程序提供的课程预约服务前，请仔细阅读本协议。一旦您开始使用服务，即表示您已充分理解并同意本协议全部内容。</text>
     </view>
 
     <view class="agreement-section">
